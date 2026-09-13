@@ -16,8 +16,21 @@ jobs:
         # repo we have no access to (and don't need) — Belledonne's own
         # GitLab CI excludes it the same way (GIT_SUBMODULE_PATHS in
         # .gitlab-ci.yml), so only init the ones the build actually needs.
+        # gitlab.linphone.org drops connections when git tries to clone all
+        # ~35 nested submodules (aom, libvpx, sqlite3, zlib...) in parallel —
+        # force one at a time and retry, since already-cloned submodules are
+        # skipped on the next attempt.
+        shell: pwsh
         run: |
-          git submodule update --init --recursive external/linphone-sdk external/google/gn external/google/crashpad external/google/chromium-depot-tools
+          $maxAttempts = 5
+          for ($i = 1; $i -le $maxAttempts; $i++) {
+            Write-Output "Submodule update attempt $i/$maxAttempts"
+            git submodule update --init --recursive --jobs 1 --depth 1 external/linphone-sdk external/google/gn external/google/crashpad external/google/chromium-depot-tools
+            if ($LASTEXITCODE -eq 0) { break }
+            if ($i -eq $maxAttempts) { throw "Submodule update failed after $maxAttempts attempts" }
+            Write-Output "Attempt $i failed, retrying in 15s..."
+            Start-Sleep -Seconds 15
+          }
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
