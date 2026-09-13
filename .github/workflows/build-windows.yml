@@ -10,8 +10,14 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
+
+      - name: Init public submodules only
+        # .gitmodules also lists external/feature-specs, a private Belledonne
+        # repo we have no access to (and don't need) — Belledonne's own
+        # GitLab CI excludes it the same way (GIT_SUBMODULE_PATHS in
+        # .gitlab-ci.yml), so only init the ones the build actually needs.
+        run: |
+          git submodule update --init --recursive external/linphone-sdk external/google/gn external/google/crashpad external/google/chromium-depot-tools
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
