@@ -1234,11 +1234,26 @@ DEFINE_GETSET_CONFIG(SettingsModel,
 							UsernameOnlyForCardDAVLookupsInCalls,
 							"username_only_for_carddav_lookups_in_calls",
 							false)
+// KiwiCall: on an incoming call, open the KiwiCall web app so the operator
+// gets the caller's client card there (same popup as the browser-only flow) —
+// no separate tray helper app needed. Users can still override or clear this
+// in Settings, or set disable_command_line to opt out entirely.
+static std::string kiwiCallDefaultCommandLine() {
+#if defined(Q_OS_WIN)
+	return "start https://kiwicall.ru/app";
+#elif defined(Q_OS_MACOS)
+	return "open https://kiwicall.ru/app";
+#elif defined(Q_OS_LINUX)
+	return "xdg-open https://kiwicall.ru/app";
+#else
+	return "";
+#endif
+}
 DEFINE_GETSET_CONFIG_STRING(SettingsModel,
 							commandLine,
 							CommandLine,
 							"command_line",
-							"")
+							kiwiCallDefaultCommandLine())
 DEFINE_GETSET_CONFIG(SettingsModel,
 							bool,
 							Bool,
@@ -1250,7 +1265,7 @@ DEFINE_GETSET_CONFIG_STRING(SettingsModel,
 							themeMainColor,
 							ThemeMainColor,
 							"theme_main_color",
-							"orange")
+							"kiwicall")
 DEFINE_GETSET_CONFIG_STRING(SettingsModel,
 							themeAboutPictureUrl,
 							ThemeAboutPictureUrl,

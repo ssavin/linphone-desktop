@@ -4,6 +4,14 @@ import QtQuick
 QtObject {
     property var themes: {
         return {
+            "kiwicall": {
+                "main100": "#D3E0FB",
+                "main200": "#B3C8F9",
+                "main300": "#87A9F4",
+                "main500": "#2563EB",
+                "main600": "#1E4FBC",
+                "main700": "#184099"
+            },
             "orange": {
                 "main100": "#FFEACB",
                 "main200": "#FFD098",
