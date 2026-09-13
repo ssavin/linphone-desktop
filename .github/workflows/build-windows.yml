@@ -1,0 +1,50 @@
+name: Build Windows desktop app
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: "6.8.3"
+          modules: "qtnetworkauth"
+
+      - name: Install Ninja and NASM
+        run: choco install ninja nasm -y
+
+      - name: Add NASM to PATH
+        run: echo "C:\Program Files\NASM" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Set up MSVC dev environment
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Configure
+        run: |
+          mkdir build-desktop
+          cd build-desktop
+          cmake .. -G Ninja -DLINPHONESDK_PLATFORM=Desktop -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_C_COMPILER=cl.exe -DCMAKE_CXX_COMPILER=cl.exe -DENABLE_UNIT_TESTS=NO -DENABLE_GPL_THIRD_PARTIES=OFF
+
+      - name: Build
+        run: |
+          cd build-desktop
+          cmake --build . --target install --config RelWithDebInfo
+
+      - name: Upload build output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kiwicall-desktop-windows
+          path: |
+            build-desktop/OUTPUT/**
+            build-desktop/ninja_buildlog.txt
+          if-no-files-found: warn
