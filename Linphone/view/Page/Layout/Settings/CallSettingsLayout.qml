@@ -168,6 +168,7 @@ AbstractSettingsLayout {
 		MultimediaSettings {
 			ringerDevicesVisible: true
 			backgroundVisible: false
+			forceUpdatingDeviceWithoutSaving: true
             spacing: Utils.getSizeWithScreenRatio(20)
 		}
 	}
