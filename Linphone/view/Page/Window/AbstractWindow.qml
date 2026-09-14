@@ -13,8 +13,8 @@ ApplicationWindow {
     id: mainWindow
     x: 0
     y: 0
-    width: Math.min(Utils.getSizeWithScreenRatio(1512), Screen.desktopAvailableWidth)
-    height: Math.min(Utils.getSizeWithScreenRatio(982), Screen.desktopAvailableHeight)
+    width: Math.min(Utils.getSizeWithScreenRatio(1020), Screen.desktopAvailableWidth)
+    height: Math.min(Utils.getSizeWithScreenRatio(700), Screen.desktopAvailableHeight)
 
     onActiveChanged: {
         if (active) UtilsCpp.setLastActiveWindow(this)

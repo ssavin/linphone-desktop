@@ -52,7 +52,7 @@ QtObject {
 	property string usersThreeSelected: "image://internal/users-three-fill.svg"
 	property string usersThreeFilled: "image://internal/users-three-filled.svg"
 	property string userPlus: "image://internal/user-plus.svg"
-	property string noItemImage: "image://internal/noItemImage.svg"
+	property string noItemImage: "image://internal/noItemImage.png"
 	property string verticalDots: "image://internal/dots-three-vertical.svg"
 	property string plusCircle: "image://internal/plus-circle.svg"
 	property string micro: "image://internal/microphone-stage.svg"
