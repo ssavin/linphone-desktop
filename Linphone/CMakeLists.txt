@@ -22,7 +22,7 @@ set(APP_TARGETS ${LinphoneCxx_TARGET}
 				${LibLinphone_TARGET})#Liblinphone
 
 set(QT_DEFAULT_MAJOR_VERSION 6)
-set(QT_PACKAGES Quick Qml Widgets Svg Test NetworkAuth Concurrent)# Search Core at first for initialize Qt scripts for next find_packages.
+set(QT_PACKAGES Quick Qml Widgets Svg Test NetworkAuth Network Concurrent)# Search Core at first for initialize Qt scripts for next find_packages.
 if (UNIX AND NOT APPLE)
 	list(APPEND QT_PACKAGES DBus)
 endif()
@@ -99,6 +99,14 @@ execute_process(
     OUTPUT_VARIABLE LINPHONESDK_VERSION
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
+# KiwiCall: external/linphone-sdk is an extracted tarball with no .git here,
+# so `git describe` above always fails and leaves this empty. config.h.cmake
+# uses #cmakedefine, which silently omits the macro entirely when the value
+# is empty (rather than defining it as "") - fall back to the version already
+# resolved for the SDK itself instead of leaving LINPHONESDK_VERSION undefined.
+if(NOT LINPHONESDK_VERSION)
+    set(LINPHONESDK_VERSION "5.5.0")
+endif()
 
 include(application_info.cmake)
 string(TIMESTAMP CURRENT_YEAR "%Y")
@@ -143,7 +151,7 @@ add_subdirectory(core)
 
 set(LANGUAGES_DIRECTORY "data/languages")
 set(I18N_FILENAME i18n.qrc)
-set(LANGUAGES en fr de nl)
+set(LANGUAGES en fr de nl ru)
 set(CMAKE_CPP_COMPILER gcc)
 
 # Add languages support.

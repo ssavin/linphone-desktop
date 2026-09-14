@@ -78,15 +78,15 @@ AbstractWindow {
 	function initStackViewItem() {
         if(accountProxy && accountProxy.isInitialized) {
             if (accountProxy.haveAccount) openMainPage()
+            else if (SettingsCpp.assistantGoDirectlyToThirdPartySipAccountLogin) mainStackViewLoader.item.replace(kiwiCallLoginPage, StackView.Immediate)
             else if (SettingsCpp.getFirstLaunch()) mainStackViewLoader.item.replace(welcomePage, StackView.Immediate)
-            else if (SettingsCpp.assistantGoDirectlyToThirdPartySipAccountLogin) mainStackViewLoader.item.replace(sipLoginPage, StackView.Immediate)
             else mainStackViewLoader.item.replace(loginPage, StackView.Immediate)
         }
     }
-	
+
 	function goToLogin() {
 		if (SettingsCpp.assistantGoDirectlyToThirdPartySipAccountLogin)
-			mainStackViewLoader.item.replace(sipLoginPage)
+			mainStackViewLoader.item.replace(kiwiCallLoginPage)
 		else
 			mainStackViewLoader.item.replace(loginPage)
 	}
@@ -110,8 +110,9 @@ AbstractWindow {
 
 	function reauthenticateAccount(identity, domain, callback){
 		if (authenticationPopupOpened) return
-		if (mainStackViewLoader.item?.currentItem.objectName === "loginPage" 
-		|| mainStackViewLoader.item?.currentItem.objectName === "sipLoginPage")
+		if (mainStackViewLoader.item?.currentItem.objectName === "loginPage"
+		|| mainStackViewLoader.item?.currentItem.objectName === "sipLoginPage"
+		|| mainStackViewLoader.item?.currentItem.objectName === "kiwiCallLoginPage")
 			return
 		console.log("Showing authentication dialog")
 		var popup = authenticationPopupComp.createObject(mainWindow, {"identity": identity, "domain": domain, "callback":callback})	// Callback ownership is not passed
@@ -273,13 +274,23 @@ AbstractWindow {
 		id: sipLoginPage
 		SIPLoginPage {
 			objectName: "sipLoginPage"
+			onGoBack: mainStackViewLoader.item.pop()
+			onGoToRegister: mainStackViewLoader.item.replace(registerPage)
+            showBackButton: false
+            StackView.onActivated: showBackButton = true
+		}
+	}
+	Component {
+		id: kiwiCallLoginPage
+		KiwiCallLoginPage {
+			objectName: "kiwiCallLoginPage"
 			onGoBack: {
-				if(SettingsCpp.assistantGoDirectlyToThirdPartySipAccountLogin){
+				if (SettingsCpp.assistantGoDirectlyToThirdPartySipAccountLogin)
 					openMainPage()
-				}else
+				else
 					mainStackViewLoader.item.pop()
 			}
-			onGoToRegister: mainStackViewLoader.item.replace(registerPage)
+			onUseSIPButtonClicked: mainStackViewLoader.item.push(sipLoginPage)
             showBackButton: false
             StackView.onActivated: if (!SettingsCpp.assistantGoDirectlyToThirdPartySipAccountLogin || mainWindow.accountProxy?.haveAccount) showBackButton = true
 		}

@@ -44,8 +44,10 @@ list(APPEND _LINPHONEAPP_SOURCES
 	core/fps-counter/FPSCounter.cpp
 	core/friend/FriendCore.cpp
 	core/friend/FriendGui.cpp
+	core/friend/ContactImportCore.cpp
 	core/logger/QtLogger.cpp
 	core/login/LoginPage.cpp
+	core/login/KiwiCallLoginCore.cpp
 	core/notifier/Notifier.cpp
 	core/notifier/AbstractNotificationBackend.cpp
 	core/path/Paths.cpp

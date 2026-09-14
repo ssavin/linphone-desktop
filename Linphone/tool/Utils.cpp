@@ -49,6 +49,7 @@
 #include <QFileInfo>
 #include <QHostAddress>
 #include <QImageReader>
+#include <QJsonDocument>
 #include <QMimeDatabase>
 #include <QPainter>
 #include <QProcess>

@@ -108,6 +108,95 @@
     </message>
 </context>
 <context>
+    <name>ContactImportCore</name>
+    <message>
+        <location filename="../../core/friend/ContactImportCore.cpp" line="1"/>
+        <source>contact_import_file_open_error</source>
+        <translation>Could not open the file</translation>
+    </message>
+    <message>
+        <location filename="../../core/friend/ContactImportCore.cpp" line="1"/>
+        <source>contact_import_file_empty_error</source>
+        <translation>No contacts found in this file</translation>
+    </message>
+    <message>
+        <location filename="../../core/friend/ContactImportCore.cpp" line="1"/>
+        <source>contact_import_network_error</source>
+        <translation>Connection error: %1</translation>
+    </message>
+    <message>
+        <location filename="../../core/friend/ContactImportCore.cpp" line="1"/>
+        <source>contact_import_login_failed_error</source>
+        <translation>Could not sign in to KiwiCall</translation>
+    </message>
+    <message>
+        <location filename="../../core/friend/ContactImportCore.cpp" line="1"/>
+        <source>contact_import_multiple_clinics_error</source>
+        <translation>This account belongs to several clinics, which is not supported by this import yet</translation>
+    </message>
+    <message>
+        <location filename="../../core/friend/ContactImportCore.cpp" line="1"/>
+        <source>contact_import_no_clients_error</source>
+        <translation>No clients with a phone number were found</translation>
+    </message>
+</context>
+<context>
+    <name>KiwiCallLoginCore</name>
+    <message>
+        <location filename="../../core/login/KiwiCallLoginCore.cpp" line="1"/>
+        <source>kiwicall_login_network_error</source>
+        <translation>Could not reach the KiwiCall server</translation>
+    </message>
+    <message>
+        <location filename="../../core/login/KiwiCallLoginCore.cpp" line="1"/>
+        <source>kiwicall_login_multiple_clinics_error</source>
+        <translation>This account is linked to several clinics — please contact your administrator</translation>
+    </message>
+    <message>
+        <location filename="../../core/login/KiwiCallLoginCore.cpp" line="1"/>
+        <source>kiwicall_login_failed_error</source>
+        <translation>Incorrect email or password</translation>
+    </message>
+</context>
+<context>
+    <name>KiwiCallLoginPage</name>
+    <message>
+        <location filename="../../view/Page/Form/Login/KiwiCallLoginPage.qml" line="1"/>
+        <source>kiwicall_login_title</source>
+        <translation>Sign in to KiwiCall</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Form/Login/KiwiCallLoginPage.qml" line="1"/>
+        <source>kiwicall_login_email</source>
+        <translation>Email</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Form/Login/KiwiCallLoginPage.qml" line="1"/>
+        <source>kiwicall_login_password</source>
+        <translation>Password</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Form/Login/KiwiCallLoginPage.qml" line="1"/>
+        <source>kiwicall_login_missing_email</source>
+        <translation>Please enter an email address</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Form/Login/KiwiCallLoginPage.qml" line="1"/>
+        <source>kiwicall_login_missing_password</source>
+        <translation>Please enter a password</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Form/Login/KiwiCallLoginPage.qml" line="1"/>
+        <source>kiwicall_login_button</source>
+        <translation>Sign in</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Form/Login/KiwiCallLoginPage.qml" line="1"/>
+        <source>kiwicall_login_manual_sip_link</source>
+        <translation>Set up SIP manually</translation>
+    </message>
+</context>
+<context>
     <name>AccountListView</name>
     <message>
         <location filename="../../view/Page/Main/Account/AccountListView.qml" line="87"/>
@@ -3534,6 +3623,46 @@ You are about to call &quot;%1&quot; do you want to continue?</translation>
         <location filename="../../view/Page/Layout/Settings/ContactsSettingsLayout.qml" line="22"/>
         <source>settings_contacts_carddav_subtitle</source>
         <translation>Add a CardDAV address book to sync your Linphone contacts with a third-party address book.</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Layout/Settings/ContactsSettingsLayout.qml" line="30"/>
+        <source>settings_contacts_import_title</source>
+        <translation>Import contacts</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Layout/Settings/ContactsSettingsLayout.qml" line="31"/>
+        <source>settings_contacts_import_subtitle</source>
+        <translation>Import your client list from KiwiCall or from a CSV file.</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Layout/Settings/ContactsSettingsLayout.qml" line="130"/>
+        <source>settings_contacts_import_csv_title</source>
+        <translation>From a CSV file</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Layout/Settings/ContactsSettingsLayout.qml" line="136"/>
+        <source>settings_contacts_import_csv_button</source>
+        <translation>Choose a file...</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Layout/Settings/ContactsSettingsLayout.qml" line="153"/>
+        <source>settings_contacts_import_kiwicall_title</source>
+        <translation>From KiwiCall</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Layout/Settings/ContactsSettingsLayout.qml" line="159"/>
+        <source>settings_contacts_import_kiwicall_email_placeholder</source>
+        <translation>KiwiCall email</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Layout/Settings/ContactsSettingsLayout.qml" line="170"/>
+        <source>settings_contacts_import_kiwicall_button</source>
+        <translation>Import</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Layout/Settings/ContactsSettingsLayout.qml" line="192"/>
+        <source>settings_contacts_import_success</source>
+        <translation>%1 contacts imported</translation>
     </message>
     <message>
         <location filename="../../view/Page/Layout/Settings/ContactsSettingsLayout.qml" line="42"/>

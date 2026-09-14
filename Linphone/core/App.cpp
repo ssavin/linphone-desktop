@@ -66,9 +66,11 @@
 #include "core/conference/ConferenceInfoProxy.hpp"
 #include "core/emoji/EmojiProxy.hpp"
 #include "core/fps-counter/FPSCounter.hpp"
+#include "core/friend/ContactImportCore.hpp"
 #include "core/friend/FriendCore.hpp"
 #include "core/friend/FriendGui.hpp"
 #include "core/logger/QtLogger.hpp"
+#include "core/login/KiwiCallLoginCore.hpp"
 #include "core/login/LoginPage.hpp"
 #include "core/notifier/Notifier.hpp"
 #include "core/participant/ParticipantDeviceProxy.hpp"
@@ -561,7 +563,7 @@ void App::connectCoreModel() {
 	                                         });
 	mCoreModelConnection->makeConnectToCore(&App::lForceOidcTimeout, [this] {
 		qDebug() << "App: force oidc timeout";
-		mCoreModelConnection->invokeToModel([this] { emit CoreModel::getInstance()->forceOidcTimeout(); });
+		mCoreModelConnection->invokeToModel([this] { emit CoreModel::getInstance() -> forceOidcTimeout(); });
 	});
 	mCoreModelConnection->makeConnectToModel(&CoreModel::timeoutTimerStarted, [this]() {
 		qDebug() << "App: oidc timer started";
@@ -979,9 +981,10 @@ void App::initLocale() {
 	//	}
 	//	QLocale sysLocale = QLocale(qtLocale.join('_'));
 	// #else
+	// KiwiCall: default to Russian regardless of the OS locale (our customers are Russian-speaking
+	// clinics) instead of following QLocale::system(). LINPHONE_FORCE_LANGUAGE still overrides it.
 	QByteArray forcedLanguage = qgetenv("LINPHONE_FORCE_LANGUAGE");
-	QLocale sysLocale =
-	    forcedLanguage.isEmpty() ? QLocale(QLocale::system().name()) : QLocale(QString::fromUtf8(forcedLanguage));
+	QLocale sysLocale = QLocale(forcedLanguage.isEmpty() ? QStringLiteral("ru") : QString::fromUtf8(forcedLanguage));
 	if (installLocale(*this, *mTranslatorCore, sysLocale)) {
 		qDebug() << "installed sys locale" << sysLocale.name();
 		setLocale(sysLocale.name());
@@ -1018,6 +1021,20 @@ void App::initCppInterfaces() {
 	qmlRegisterSingletonType<SettingsCore>(
 	    "SettingsCpp", 1, 0, "SettingsCpp",
 	    [this](QQmlEngine *engine, QJSEngine *) -> QObject * { return mSettings.get(); });
+
+	qmlRegisterSingletonType<ContactImportCore>(
+	    "ContactImportCpp", 1, 0, "ContactImportCpp", [](QQmlEngine *engine, QJSEngine *) -> QObject * {
+		    static QSharedPointer<ContactImportCore> contactImport = ContactImportCore::create();
+		    App::getInstance()->mEngine->setObjectOwnership(contactImport.get(), QQmlEngine::CppOwnership);
+		    return contactImport.get();
+	    });
+
+	qmlRegisterSingletonType<KiwiCallLoginCore>(
+	    "KiwiCallLoginCpp", 1, 0, "KiwiCallLoginCpp", [](QQmlEngine *engine, QJSEngine *) -> QObject * {
+		    static QSharedPointer<KiwiCallLoginCore> kiwiCallLogin = KiwiCallLoginCore::create();
+		    App::getInstance()->mEngine->setObjectOwnership(kiwiCallLogin.get(), QQmlEngine::CppOwnership);
+		    return kiwiCallLogin.get();
+	    });
 
 	qmlRegisterSingletonType<AccessibilityHelper>(
 	    "AccessibilityHelperCpp", 1, 0, "AccessibilityHelperCpp",

@@ -135,6 +135,7 @@ list(APPEND _LINPHONEAPP_QML_FILES
 	view/Page/Form/Contact/ContactDescription.qml
 	view/Page/Form/Contact/ContactEdition.qml
 	view/Page/Form/Contact/ContactSharedFiles.qml
+	view/Page/Form/Login/KiwiCallLoginPage.qml
 	view/Page/Form/Login/LoginPage.qml
 	view/Page/Form/Login/SIPLoginPage.qml
 	view/Page/Form/Meeting/AddParticipantsForm.qml

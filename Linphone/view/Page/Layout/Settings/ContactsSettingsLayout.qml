@@ -2,8 +2,11 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls.Basic as Control
+import QtQuick.Dialogs
 import SettingsCpp
+import ContactImportCpp
 import Linphone
+import "qrc:/qt/qml/Linphone/view/Control/Tool/Helper/utils.js" as Utils
 
 AbstractSettingsLayout {
 	id: mainItem
@@ -21,6 +24,12 @@ AbstractSettingsLayout {
             title: qsTr("settings_contacts_carddav_title"),
             subTitle: qsTr("settings_contacts_carddav_subtitle"),
 			contentComponent: cardDavParametersComponent,
+			hideTopMargin: true
+		},
+		{
+			title: qsTr("settings_contacts_import_title"),
+			subTitle: qsTr("settings_contacts_import_subtitle"),
+			contentComponent: importContactsComponent,
 			hideTopMargin: true
 		}
 	]
@@ -93,6 +102,105 @@ AbstractSettingsLayout {
 				target: mainItem
 				function onSave() { save()}
 				function onUndo() { undo()}
+			}
+		}
+	}
+
+	// Contact import (KiwiCall CRM or a local CSV file)
+	/////////////////////////////////////////////////////
+
+	Component {
+		id: importContactsComponent
+		ColumnLayout {
+			id: importRoot
+			spacing: Utils.getSizeWithScreenRatio(20)
+			property bool busy: false
+
+			FileDialog {
+				id: csvFileDialog
+				nameFilters: ["CSV files (*.csv)"]
+				options: FileDialog.ReadOnly
+				onAccepted: {
+					importRoot.busy = true
+					importStatus.text = ""
+					ContactImportCpp.importFromCsv(Utils.getSystemPathFromUri(selectedFile))
+				}
+			}
+
+			ColumnLayout {
+				spacing: Utils.getSizeWithScreenRatio(8)
+				Layout.fillWidth: true
+				Text {
+					text: qsTr("settings_contacts_import_csv_title")
+					font: Typography.p2l
+					color: DefaultStyle.main2_600
+				}
+				MediumButton {
+					text: qsTr("settings_contacts_import_csv_button")
+					enabled: !importRoot.busy
+					onClicked: csvFileDialog.open()
+				}
+			}
+
+			Rectangle {
+				Layout.fillWidth: true
+				height: Utils.getSizeWithScreenRatio(1)
+				color: DefaultStyle.main2_500_main
+			}
+
+			ColumnLayout {
+				spacing: Utils.getSizeWithScreenRatio(8)
+				Layout.fillWidth: true
+				Text {
+					text: qsTr("settings_contacts_import_kiwicall_title")
+					font: Typography.p2l
+					color: DefaultStyle.main2_600
+				}
+				TextField {
+					id: kiwiEmail
+					Layout.fillWidth: true
+					placeholderText: qsTr("settings_contacts_import_kiwicall_email_placeholder")
+				}
+				TextField {
+					id: kiwiPassword
+					Layout.fillWidth: true
+					hidden: true
+					placeholderText: qsTr("password")
+				}
+				MediumButton {
+					text: qsTr("settings_contacts_import_kiwicall_button")
+					enabled: !importRoot.busy && kiwiEmail.text.length > 0 && kiwiPassword.text.length > 0
+					onClicked: {
+						importRoot.busy = true
+						importStatus.text = ""
+						ContactImportCpp.importFromKiwiCall(kiwiEmail.text, kiwiPassword.text)
+					}
+				}
+			}
+
+			Text {
+				id: importStatus
+				Layout.fillWidth: true
+				wrapMode: Text.WordWrap
+				font: Typography.p2
+			}
+
+			Connections {
+				target: ContactImportCpp
+				function onImportStarted() {
+					importRoot.busy = true
+				}
+				function onImportFinished(successCount, errorCount) {
+					importRoot.busy = false
+					importStatus.color = DefaultStyle.success_500_main
+					//: "%1 contacts imported"
+					importStatus.text = qsTr("settings_contacts_import_success").arg(successCount)
+				}
+				function onImportError(message) {
+					importRoot.busy = false
+					importStatus.color = DefaultStyle.danger_500_main
+					importStatus.text = message
+				}
 			}
 		}
 	}
