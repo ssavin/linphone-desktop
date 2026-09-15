@@ -4768,6 +4768,16 @@ Expiration : %1</translation>
         <translation>Go offline</translation>
     </message>
     <message>
+        <location filename="../../view/Page/Layout/Main/MainLayout.qml" line="1"/>
+        <source>audio_ducking_fix_title</source>
+        <translation>Other sounds during calls</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Layout/Main/MainLayout.qml" line="1"/>
+        <source>audio_ducking_fix_message</source>
+        <translation>Windows lowers the volume of other apps while KiwiCall is active. Turn this off?</translation>
+    </message>
+    <message>
         <location filename="../../view/Page/Layout/Main/MainLayout.qml" line="357"/>
         <location filename="../../view/Page/Layout/Main/MainLayout.qml" line="364"/>
         <source>main_auto_answer_enabled_accessible_name</source>

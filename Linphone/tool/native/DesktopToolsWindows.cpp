@@ -23,9 +23,20 @@
 
 #include <QDebug>
 #include <QRect>
+#include <QSettings>
 #include <Windows.h>
 #include <dwmapi.h>
 // =============================================================================
+
+namespace {
+// HKCU (per-user, no admin rights needed) - see
+// https://learn.microsoft.com/en-us/windows/win32/coreaudio/stream-attenuation
+constexpr char kAudioDuckingRegPath[] = "HKEY_CURRENT_USER\\Software\\Microsoft\\Multimedia\\Audio";
+constexpr char kAudioDuckingValueName[] = "UserDuckingPreference";
+// 0 = -80%, 1 = -50%, 2 = Mute, 3 = Do nothing. Missing key = Windows default
+// (historically ducking, not "do nothing"), so treat absence as enabled.
+constexpr int kAudioDuckingDoNothing = 3;
+} // namespace
 
 DesktopTools::DesktopTools(QObject *parent) : QObject(parent) {
 }
@@ -46,6 +57,29 @@ void DesktopTools::setScreenSaverStatus(bool status) {
 
 	mScreenSaverStatus = status;
 	emit screenSaverStatusChanged(status);
+}
+
+bool DesktopTools::isAudioDuckingEnabled() const {
+	QSettings reg(kAudioDuckingRegPath, QSettings::NativeFormat);
+	return reg.value(kAudioDuckingValueName, 0).toInt() != kAudioDuckingDoNothing;
+}
+
+bool DesktopTools::disableAudioDucking() {
+	QSettings reg(kAudioDuckingRegPath, QSettings::NativeFormat);
+	reg.setValue(kAudioDuckingValueName, kAudioDuckingDoNothing);
+	reg.sync();
+	return reg.status() == QSettings::NoError;
+}
+
+bool DesktopTools::shouldOfferAudioDuckingFix() const {
+	QSettings appSettings("KiwiCall", "KiwiCall");
+	if (appSettings.value("audioDuckingFixDismissed", false).toBool()) return false;
+	return isAudioDuckingEnabled();
+}
+
+void DesktopTools::setAudioDuckingFixDismissed() {
+	QSettings appSettings("KiwiCall", "KiwiCall");
+	appSettings.setValue("audioDuckingFixDismissed", true);
 }
 
 //-----------		Get Windows

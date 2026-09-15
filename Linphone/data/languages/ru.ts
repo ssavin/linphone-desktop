@@ -4249,6 +4249,16 @@ Error</extracomment>
         <translation>Не на линии</translation>
     </message>
     <message>
+        <location filename="../../view/Page/Layout/Main/MainLayout.qml" line="1"/>
+        <source>audio_ducking_fix_title</source>
+        <translation>Другие звуки во время звонков</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Layout/Main/MainLayout.qml" line="1"/>
+        <source>audio_ducking_fix_message</source>
+        <translation>Windows приглушает звук остальных программ, когда KiwiCall активен. Отключить это?</translation>
+    </message>
+    <message>
         <location filename="../../view/Page/Layout/Main/MainLayout.qml" line="142"/>
         <source>bottom_navigation_calls_label</source>
         <extracomment>&quot;Appels&quot;</extracomment>

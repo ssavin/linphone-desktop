@@ -8,6 +8,7 @@ import Linphone
 import UtilsCpp
 import SettingsCpp
 import OnlineStatusCpp
+import DesktopToolsCpp
 import "qrc:/qt/qml/Linphone/view/Control/Tool/Helper/utils.js" as Utils
 import "qrc:/qt/qml/Linphone/view/Style/buttonStyle.js" as ButtonStyle
 
@@ -28,6 +29,28 @@ Item {
     signal createContactRequested(string name, string address)
     signal scheduleMeetingRequested(string subject, list<string> addresses)
     signal accountRemoved
+
+    // Windows mutes/lowers every other app's sound while our call audio is
+    // active (OS-level "Communications" ducking, tied to the WASAPI stream
+    // category our SDK sets - see DesktopToolsWindows.cpp) unless the user's
+    // "Sound > Communications" setting is "Do nothing". Most Windows installs
+    // default to muting instead, which reads as "KiwiCall breaks other audio"
+    // - offer the one-line registry fix once, same pattern as the Android
+    // battery-optimization-exemption dialog.
+    Component.onCompleted: {
+        if (Qt.platform.os === "windows" && DesktopToolsCpp.shouldOfferAudioDuckingFix()) {
+            UtilsCpp.getMainWindow().showConfirmationLambdaPopup("",
+                //: "Другие звуки во время звонков"
+                qsTr("audio_ducking_fix_title"),
+                //: "Windows приглушает звук остальных программ, когда KiwiCall активен. Отключить это?"
+                qsTr("audio_ducking_fix_message"),
+                function (confirmed) {
+                    if (confirmed) DesktopToolsCpp.disableAudioDucking();
+                    DesktopToolsCpp.setAudioDuckingFixDismissed();
+                }
+            );
+        }
+    }
 
     function goToNewCall() {
         tabbar.currentIndex = 0;

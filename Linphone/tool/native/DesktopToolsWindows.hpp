@@ -58,6 +58,16 @@ public:
 	HWND mWindowId = 0; // Window
 	VideoSourceDescriptorModel *mVideoSourceDescriptorModel = nullptr;
 
+	// Windows ducks (lowers/mutes) every other app's audio while our WASAPI
+	// stream is tagged AudioCategory_Communications (see external/linphone-sdk/
+	// mswasapi) - expected OS behavior for VoIP apps, but surprising to users
+	// who don't know this Windows setting exists. Offer to switch it to "no
+	// action" once, like the Android battery-optimization-exemption dialog.
+	Q_INVOKABLE bool isAudioDuckingEnabled() const;
+	Q_INVOKABLE bool disableAudioDucking();
+	Q_INVOKABLE bool shouldOfferAudioDuckingFix() const;
+	Q_INVOKABLE void setAudioDuckingFixDismissed();
+
 signals:
 	void screenSaverStatusChanged(bool status);
 	void windowIdSelectionStarted();
