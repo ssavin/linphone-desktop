@@ -190,13 +190,21 @@ void SettingsModel::stopCaptureGraph() {
 	else qCritical() << log().arg("Removing too much capture graph reference [%1]").arg(mCaptureGraphListenerCount);
 }
 
-// Force a call on the 'detect' method of all audio filters, updating new or removed devices
 void SettingsModel::accessCallSettings() {
 	mustBeInLinphoneThread(log().arg(Q_FUNC_INFO));
 	startCaptureGraph();
 
+	// reloadSoundDevices() used to run here unconditionally on every settings
+	// page open, forcing every audio filter to re-run its device 'detect'
+	// method - a full WASAPI re-enumeration. On Windows that's disruptive
+	// enough to visibly glitch or drop OTHER apps' audio for a moment
+	// (worse on Bluetooth headsets, which re-negotiate their audio profile
+	// on that kind of device-list churn) - confirmed live: opening this
+	// page reliably knocked out an unrelated app's sound. The device list
+	// is already kept current by CoreModel::onAudioDevicesListUpdated
+	// (a real hotplug callback from the SDK), so this forced sweep isn't
+	// needed for the normal case - only removed here, not the listener.
 	// Audio
-	CoreModel::getInstance()->getCore()->reloadSoundDevices();
 	emit captureDevicesChanged(getCaptureDevices());
 	emit playbackDevicesChanged(getPlaybackDevices());
 	emit playbackDeviceChanged(getPlaybackDevice());
