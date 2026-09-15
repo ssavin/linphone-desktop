@@ -10,7 +10,13 @@ AbstractSettingsMenu {
 	layoutsPath: "qrc:/qt/qml/Linphone/view/Page/Layout/Settings"
     //: "Paramètres"
     titleText: qsTr("settings_title")
+    // Keep "Calls" as the default landing panel (index 0 before this change) -
+    // the new "SIP settings" shortcut is now index 0 but shouldn't change what
+    // shows up first when opening Settings.
+    defaultIndex: 1
 	families: [
+        //: "SIP settings"
+        {title: qsTr("settings_sip_title"), layout: "SipSettingsLayout"},
         //: "Appels"
         {title: qsTr("settings_calls_title"), layout: "CallSettingsLayout"},
 		//: "Transfert d'appel"

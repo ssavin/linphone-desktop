@@ -152,6 +152,7 @@ list(APPEND _LINPHONEAPP_QML_FILES
 	view/Page/Layout/Settings/AbstractSettingsLayout.qml
 	view/Page/Layout/Settings/AccountSettingsGeneralLayout.qml
 	view/Page/Layout/Settings/AccountSettingsParametersLayout.qml
+	view/Page/Layout/Settings/SipSettingsLayout.qml
 	view/Page/Layout/Settings/CallSettingsLayout.qml
 	view/Page/Layout/Settings/CallForwardSettingsLayout.qml
 	view/Page/Layout/Settings/ContactsSettingsLayout.qml

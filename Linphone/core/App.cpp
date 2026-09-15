@@ -72,6 +72,7 @@
 #include "core/logger/QtLogger.hpp"
 #include "core/login/KiwiCallLoginCore.hpp"
 #include "core/login/LoginPage.hpp"
+#include "core/login/OnlineStatusCore.hpp"
 #include "core/notifier/Notifier.hpp"
 #include "core/participant/ParticipantDeviceProxy.hpp"
 #include "core/participant/ParticipantGui.hpp"
@@ -1034,6 +1035,13 @@ void App::initCppInterfaces() {
 		    static QSharedPointer<KiwiCallLoginCore> kiwiCallLogin = KiwiCallLoginCore::create();
 		    App::getInstance()->mEngine->setObjectOwnership(kiwiCallLogin.get(), QQmlEngine::CppOwnership);
 		    return kiwiCallLogin.get();
+	    });
+
+	qmlRegisterSingletonType<OnlineStatusCore>(
+	    "OnlineStatusCpp", 1, 0, "OnlineStatusCpp", [](QQmlEngine *engine, QJSEngine *) -> QObject * {
+		    static QSharedPointer<OnlineStatusCore> onlineStatus = OnlineStatusCore::create();
+		    App::getInstance()->mEngine->setObjectOwnership(onlineStatus.get(), QQmlEngine::CppOwnership);
+		    return onlineStatus.get();
 	    });
 
 	qmlRegisterSingletonType<AccessibilityHelper>(

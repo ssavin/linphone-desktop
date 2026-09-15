@@ -7,6 +7,7 @@ import QtQuick.Effects
 import Linphone
 import UtilsCpp
 import SettingsCpp
+import OnlineStatusCpp
 import "qrc:/qt/qml/Linphone/view/Control/Tool/Helper/utils.js" as Utils
 import "qrc:/qt/qml/Linphone/view/Style/buttonStyle.js" as ButtonStyle
 
@@ -493,6 +494,7 @@ Item {
                             icon.height: Utils.getSizeWithScreenRatio(24)
                             popup.width: Utils.getSizeWithScreenRatio(271)
                             popup.padding: Utils.getSizeWithScreenRatio(14)
+                            popup.onOpened: OnlineStatusCpp.refresh()
                             //: "Application options"
                             popUpTitle: qsTr("application_options_accessible_name")
                             popup.Accessible.role: Accessible.PopupMenu
@@ -543,6 +545,24 @@ Item {
                                         KeyNavigation.down: visibleChildren.length != 0 ? settingsMenuButton.getNextItem(1) : null
                                     }
                                     IconLabelButton {
+                                        id: onlineStatusButton
+                                        Layout.fillWidth: true
+                                        visible: OnlineStatusCpp.available
+                                        icon.width: Utils.getSizeWithScreenRatio(32)
+                                        icon.height: Utils.getSizeWithScreenRatio(32)
+                                        //: "Не на линии"
+                                        text: OnlineStatusCpp.online ? qsTr("online_status_go_offline") :
+                                        //: "На линии"
+                                        qsTr("online_status_go_online")
+                                        icon.source: AppIcons.phonePause
+                                        onClicked: {
+                                            settingsMenuButton.popup.close();
+                                            OnlineStatusCpp.toggle();
+                                        }
+                                        KeyNavigation.up: visibleChildren.length != 0 ? settingsMenuButton.getPreviousItem(2) : null
+                                        KeyNavigation.down: visibleChildren.length != 0 ? settingsMenuButton.getNextItem(2) : null
+                                    }
+                                    IconLabelButton {
                                         id: settingsButton
                                         Layout.fillWidth: true
                                         visible: !SettingsCpp.hideSettings
@@ -554,8 +574,8 @@ Item {
                                             var page = settingsPageComponent.createObject(parent);
                                             openContextualMenuComponent(page)
                                         }
-                                        KeyNavigation.up: visibleChildren.length != 0 ? settingsMenuButton.getPreviousItem(2) : null
-                                        KeyNavigation.down: visibleChildren.length != 0 ? settingsMenuButton.getNextItem(2) : null
+                                        KeyNavigation.up: visibleChildren.length != 0 ? settingsMenuButton.getPreviousItem(3) : null
+                                        KeyNavigation.down: visibleChildren.length != 0 ? settingsMenuButton.getNextItem(3) : null
                                     }
                                     // FileDialog {
                                     //     id: fileDialog
@@ -576,8 +596,8 @@ Item {
                                             openContextualMenuComponent(page)
 
                                         }
-                                        KeyNavigation.up: visibleChildren.length != 0 ? settingsMenuButton.getPreviousItem(3) : null
-                                        KeyNavigation.down: visibleChildren.length != 0 ? settingsMenuButton.getNextItem(3) : null
+                                        KeyNavigation.up: visibleChildren.length != 0 ? settingsMenuButton.getPreviousItem(4) : null
+                                        KeyNavigation.down: visibleChildren.length != 0 ? settingsMenuButton.getNextItem(4) : null
                                     }
                                     IconLabelButton {
                                         id: helpButton
@@ -591,8 +611,8 @@ Item {
                                             var page = helpPageComponent.createObject(parent);
                                             openContextualMenuComponent(page)
                                         }
-                                        KeyNavigation.up: visibleChildren.length != 0 ? settingsMenuButton.getPreviousItem(4) : null
-                                        KeyNavigation.down: visibleChildren.length != 0 ? settingsMenuButton.getNextItem(4) : null
+                                        KeyNavigation.up: visibleChildren.length != 0 ? settingsMenuButton.getPreviousItem(5) : null
+                                        KeyNavigation.down: visibleChildren.length != 0 ? settingsMenuButton.getNextItem(5) : null
                                     }
                                     IconLabelButton {
                                         id: quitButton
@@ -612,8 +632,8 @@ Item {
                                                 }
                                             });
                                         }
-                                        KeyNavigation.up: visibleChildren.length != 0 ? settingsMenuButton.getPreviousItem(5) : null
-                                        KeyNavigation.down: visibleChildren.length != 0 ? settingsMenuButton.getNextItem(5) : null
+                                        KeyNavigation.up: visibleChildren.length != 0 ? settingsMenuButton.getPreviousItem(6) : null
+                                        KeyNavigation.down: visibleChildren.length != 0 ? settingsMenuButton.getNextItem(6) : null
                                     }
                                     Rectangle {
                                         Layout.fillWidth: true
@@ -631,9 +651,15 @@ Item {
                                         text: qsTr("drawer_menu_add_account")
                                         icon.source: AppIcons.plusCircle
                                         onClicked: mainItem.addAccountRequest()
-                                        KeyNavigation.up: visibleChildren.length != 0 ? settingsMenuButton.getPreviousItem(7) : null
-                                        KeyNavigation.down: visibleChildren.length != 0 ? settingsMenuButton.getNextItem(7) : null
+                                        KeyNavigation.up: visibleChildren.length != 0 ? settingsMenuButton.getPreviousItem(8) : null
+                                        KeyNavigation.down: visibleChildren.length != 0 ? settingsMenuButton.getNextItem(8) : null
                                     }
+                                }
+                            }
+                            Connections {
+                                target: OnlineStatusCpp
+                                function onToggleFailed(message) {
+                                    UtilsCpp.showInformationPopup(qsTr("information_popup_error_title"), message, false, UtilsCpp.getMainWindow())
                                 }
                             }
 

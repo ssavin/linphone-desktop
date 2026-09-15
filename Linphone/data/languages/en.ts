@@ -159,6 +159,14 @@
     </message>
 </context>
 <context>
+    <name>OnlineStatusCore</name>
+    <message>
+        <location filename="../../core/login/OnlineStatusCore.cpp" line="1"/>
+        <source>online_status_network_error</source>
+        <translation>Could not reach the KiwiCall server</translation>
+    </message>
+</context>
+<context>
     <name>KiwiCallLoginPage</name>
     <message>
         <location filename="../../view/Page/Form/Login/KiwiCallLoginPage.qml" line="1"/>
@@ -194,6 +202,34 @@
         <location filename="../../view/Page/Form/Login/KiwiCallLoginPage.qml" line="1"/>
         <source>kiwicall_login_manual_sip_link</source>
         <translation>Set up SIP manually</translation>
+    </message>
+</context>
+<context>
+    <name>SipSettingsLayout</name>
+    <message>
+        <location filename="../../view/Page/Layout/Settings/SipSettingsLayout.qml" line="1"/>
+        <source>settings_sip_confirm_title</source>
+        <translation>Sign out of your account?</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Layout/Settings/SipSettingsLayout.qml" line="1"/>
+        <source>settings_sip_description_title</source>
+        <translation>Change SIP settings</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Layout/Settings/SipSettingsLayout.qml" line="1"/>
+        <source>settings_sip_description_subtitle</source>
+        <translation>If you need to sign in with a different extension or password, tap below. The current account will be signed out and the login screen will open.</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Layout/Settings/SipSettingsLayout.qml" line="1"/>
+        <source>settings_sip_replace_button</source>
+        <translation>Replace SIP settings</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Layout/Settings/SipSettingsLayout.qml" line="1"/>
+        <source>settings_sip_replace_confirm_message</source>
+        <translation>The current SIP account will be signed out, and the login screen will open for new settings.</translation>
     </message>
 </context>
 <context>
@@ -4722,6 +4758,16 @@ Expiration : %1</translation>
 <context>
     <name>MainLayout</name>
     <message>
+        <location filename="../../view/Page/Layout/Main/MainLayout.qml" line="1"/>
+        <source>online_status_go_online</source>
+        <translation>Go online</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Layout/Main/MainLayout.qml" line="1"/>
+        <source>online_status_go_offline</source>
+        <translation>Go offline</translation>
+    </message>
+    <message>
         <location filename="../../view/Page/Layout/Main/MainLayout.qml" line="357"/>
         <location filename="../../view/Page/Layout/Main/MainLayout.qml" line="364"/>
         <source>main_auto_answer_enabled_accessible_name</source>
@@ -6701,6 +6747,11 @@ To enable them in a commercial project, please contact us.</translation>
         <source>settings_title</source>
         <extracomment>&quot;Paramètres&quot;</extracomment>
         <translation>Settings</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Form/Settings/SettingsPage.qml" line="15"/>
+        <source>settings_sip_title</source>
+        <translation>SIP settings</translation>
     </message>
     <message>
         <location filename="../../view/Page/Form/Settings/SettingsPage.qml" line="15"/>

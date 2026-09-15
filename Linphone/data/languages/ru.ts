@@ -144,6 +144,14 @@
     </message>
 </context>
 <context>
+    <name>OnlineStatusCore</name>
+    <message>
+        <location filename="../../core/login/OnlineStatusCore.cpp" line="1"/>
+        <source>online_status_network_error</source>
+        <translation>Не удалось связаться с сервером KiwiCall</translation>
+    </message>
+</context>
+<context>
     <name>KiwiCallLoginPage</name>
     <message>
         <location filename="../../view/Page/Form/Login/KiwiCallLoginPage.qml" line="1"/>
@@ -179,6 +187,34 @@
         <location filename="../../view/Page/Form/Login/KiwiCallLoginPage.qml" line="1"/>
         <source>kiwicall_login_manual_sip_link</source>
         <translation>Настроить SIP вручную</translation>
+    </message>
+</context>
+<context>
+    <name>SipSettingsLayout</name>
+    <message>
+        <location filename="../../view/Page/Layout/Settings/SipSettingsLayout.qml" line="1"/>
+        <source>settings_sip_confirm_title</source>
+        <translation>Выйти из учётной записи?</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Layout/Settings/SipSettingsLayout.qml" line="1"/>
+        <source>settings_sip_description_title</source>
+        <translation>Изменение SIP-настроек</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Layout/Settings/SipSettingsLayout.qml" line="1"/>
+        <source>settings_sip_description_subtitle</source>
+        <translation>Если нужно войти с другим добавочным или паролем — нажмите ниже. Текущая учётная запись будет отключена, и откроется экран входа.</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Layout/Settings/SipSettingsLayout.qml" line="1"/>
+        <source>settings_sip_replace_button</source>
+        <translation>Заменить SIP-настройки</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Layout/Settings/SipSettingsLayout.qml" line="1"/>
+        <source>settings_sip_replace_confirm_message</source>
+        <translation>Текущий SIP-аккаунт будет отключён, и откроется экран входа для новых параметров.</translation>
     </message>
 </context>
 <context>
@@ -4149,7 +4185,7 @@ Error</extracomment>
         <location filename="../../view/Page/Form/Login/LoginPage.qml" line="97"/>
         <source>assistant_login_third_party_sip_account_title</source>
         <extracomment>&quot;Compte SIP tiers&quot;</extracomment>
-        <translation>Сторонняя учетная запись SIP</translation>
+        <translation>SIP-аккаунт</translation>
     </message>
     <message>
         <location filename="../../view/Page/Form/Login/LoginPage.qml" line="106"/>
@@ -4202,6 +4238,16 @@ Error</extracomment>
 </context>
 <context>
     <name>MainLayout</name>
+    <message>
+        <location filename="../../view/Page/Layout/Main/MainLayout.qml" line="1"/>
+        <source>online_status_go_online</source>
+        <translation>На линии</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Layout/Main/MainLayout.qml" line="1"/>
+        <source>online_status_go_offline</source>
+        <translation>Не на линии</translation>
+    </message>
     <message>
         <location filename="../../view/Page/Layout/Main/MainLayout.qml" line="142"/>
         <source>bottom_navigation_calls_label</source>
@@ -5456,7 +5502,7 @@ Error</extracomment>
         <location filename="../../view/Page/Form/Login/SIPLoginPage.qml" line="44"/>
         <source>assistant_login_third_party_sip_account_title</source>
         <extracomment>Compte SIP tiers</extracomment>
-        <translation>Сторонняя учетная запись SIP</translation>
+        <translation>SIP-аккаунт</translation>
     </message>
     <message>
         <location filename="../../view/Page/Form/Login/SIPLoginPage.qml" line="62"/>
@@ -5479,7 +5525,7 @@ Ces fonctionnalités seront masquées si vous utilisez un compte SIP tiers.
 Pour les activer dans un projet commercial, merci de nous contacter.</source>
         <translation>Для некоторых функций, таких как групповые чаты, видеоконференции и т.д., требуется %1 учетная запись.
 
-Эти функции будут скрыты, если вы используете стороннюю учетную запись SIP.
+Эти функции будут скрыты, если вы используете SIP-аккаунт.
 
 Чтобы включить их в коммерческий проект, пожалуйста, свяжитесь с нами.</translation>
     </message>
@@ -5760,6 +5806,11 @@ Pour les activer dans un projet commercial, merci de nous contacter.</source>
         <source>settings_title</source>
         <extracomment>&quot;Paramètres&quot;</extracomment>
         <translation>Настройки</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Form/Settings/SettingsPage.qml" line="15"/>
+        <source>settings_sip_title</source>
+        <translation>SIP-настройки</translation>
     </message>
     <message>
         <location filename="../../view/Page/Form/Settings/SettingsPage.qml" line="15"/>

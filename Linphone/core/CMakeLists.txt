@@ -48,6 +48,7 @@ list(APPEND _LINPHONEAPP_SOURCES
 	core/logger/QtLogger.cpp
 	core/login/LoginPage.cpp
 	core/login/KiwiCallLoginCore.cpp
+	core/login/OnlineStatusCore.cpp
 	core/notifier/Notifier.cpp
 	core/notifier/AbstractNotificationBackend.cpp
 	core/path/Paths.cpp
