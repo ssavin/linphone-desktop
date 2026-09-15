@@ -58,6 +58,12 @@ noise_suppression=0
 assistant_supports_phone_numbers/readonly=0
 use_qrcode=0
 assistant_go_directly_to_third_party_sip_account_login=1
+# KiwiCall: SIP accounts are provisioned server-side by clinic admins,
+# not self-registered. The built-in "Create account" flow creates an
+# account against linphone.org's own Account Manager Services backend
+# regardless of any on-screen label, so hide it entirely rather than
+# leave a button that doesn't do what it visually claims to do.
+assistant_hide_create_account=1
 assistant_third_party_sip_account_domain=200.165.231.27:5060
 assistant_third_party_sip_account_transport=UDP
 # KiwiCall: we don't run our own update-distribution server, so the built-in
