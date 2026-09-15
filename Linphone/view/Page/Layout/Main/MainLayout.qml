@@ -448,6 +448,55 @@ Item {
                                 }
                             }
                         }
+                        Control.Control {
+                            id: onlineStatusBadge
+                            visible: OnlineStatusCpp.available
+                            Layout.preferredHeight: Utils.getSizeWithScreenRatio(28)
+                            implicitWidth: onlineStatusBadgeContent.implicitWidth + Utils.getSizeWithScreenRatio(24)
+                            enabled: !OnlineStatusCpp.busy
+                            opacity: OnlineStatusCpp.busy ? 0.5 : 1.0
+                            Accessible.role: Accessible.Button
+                            Accessible.name: OnlineStatusCpp.online ? qsTr("online_status_go_offline") : qsTr("online_status_go_online")
+                            Accessible.onPressAction: OnlineStatusCpp.toggle()
+                            Component.onCompleted: OnlineStatusCpp.refresh()
+                            background: Rectangle {
+                                color: OnlineStatusCpp.online ? DefaultStyle.account_status_background_green : DefaultStyle.account_status_background_red
+                                border.color: onlineStatusBadge.activeFocus ? DefaultStyle.main2_900 : "transparent"
+                                border.width: Utils.getSizeWithScreenRatio(2)
+                                radius: height / 2
+                            }
+                            RowLayout {
+                                id: onlineStatusBadgeContent
+                                anchors.centerIn: parent
+                                spacing: Utils.getSizeWithScreenRatio(8)
+                                Rectangle {
+                                    Layout.preferredWidth: Utils.getSizeWithScreenRatio(8)
+                                    Layout.preferredHeight: Utils.getSizeWithScreenRatio(8)
+                                    radius: width / 2
+                                    color: OnlineStatusCpp.online ? DefaultStyle.account_status_green : DefaultStyle.account_status_red
+                                }
+                                Text {
+                                    font.weight: Typography.p2.weight
+                                    font.pixelSize: Typography.p2.pixelSize
+                                    color: OnlineStatusCpp.online ? DefaultStyle.account_status_green : DefaultStyle.account_status_red
+                                    //: "На линии" / "Не на линии" as a current-state label, not an action
+                                    text: OnlineStatusCpp.online ? qsTr("online_status_go_online") : qsTr("online_status_go_offline")
+                                }
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                enabled: onlineStatusBadge.enabled
+                                onClicked: OnlineStatusCpp.toggle()
+                            }
+                            HoverHandler {
+                                id: onlineStatusBadgeHover
+                            }
+                            ToolTip {
+                                visible: onlineStatusBadgeHover.hovered
+                                text: OnlineStatusCpp.online ? qsTr("online_status_go_offline") : qsTr("online_status_go_online")
+                            }
+                        }
                         PopupButton {
                             id: avatarButton
                             Layout.preferredWidth: Utils.getSizeWithScreenRatio(54)
@@ -545,24 +594,6 @@ Item {
                                         KeyNavigation.down: visibleChildren.length != 0 ? settingsMenuButton.getNextItem(1) : null
                                     }
                                     IconLabelButton {
-                                        id: onlineStatusButton
-                                        Layout.fillWidth: true
-                                        visible: OnlineStatusCpp.available
-                                        icon.width: Utils.getSizeWithScreenRatio(32)
-                                        icon.height: Utils.getSizeWithScreenRatio(32)
-                                        //: "Не на линии"
-                                        text: OnlineStatusCpp.online ? qsTr("online_status_go_offline") :
-                                        //: "На линии"
-                                        qsTr("online_status_go_online")
-                                        icon.source: AppIcons.phonePause
-                                        onClicked: {
-                                            settingsMenuButton.popup.close();
-                                            OnlineStatusCpp.toggle();
-                                        }
-                                        KeyNavigation.up: visibleChildren.length != 0 ? settingsMenuButton.getPreviousItem(2) : null
-                                        KeyNavigation.down: visibleChildren.length != 0 ? settingsMenuButton.getNextItem(2) : null
-                                    }
-                                    IconLabelButton {
                                         id: settingsButton
                                         Layout.fillWidth: true
                                         visible: !SettingsCpp.hideSettings
@@ -574,8 +605,8 @@ Item {
                                             var page = settingsPageComponent.createObject(parent);
                                             openContextualMenuComponent(page)
                                         }
-                                        KeyNavigation.up: visibleChildren.length != 0 ? settingsMenuButton.getPreviousItem(3) : null
-                                        KeyNavigation.down: visibleChildren.length != 0 ? settingsMenuButton.getNextItem(3) : null
+                                        KeyNavigation.up: visibleChildren.length != 0 ? settingsMenuButton.getPreviousItem(2) : null
+                                        KeyNavigation.down: visibleChildren.length != 0 ? settingsMenuButton.getNextItem(2) : null
                                     }
                                     // FileDialog {
                                     //     id: fileDialog
@@ -596,8 +627,8 @@ Item {
                                             openContextualMenuComponent(page)
 
                                         }
-                                        KeyNavigation.up: visibleChildren.length != 0 ? settingsMenuButton.getPreviousItem(4) : null
-                                        KeyNavigation.down: visibleChildren.length != 0 ? settingsMenuButton.getNextItem(4) : null
+                                        KeyNavigation.up: visibleChildren.length != 0 ? settingsMenuButton.getPreviousItem(3) : null
+                                        KeyNavigation.down: visibleChildren.length != 0 ? settingsMenuButton.getNextItem(3) : null
                                     }
                                     IconLabelButton {
                                         id: helpButton
@@ -611,8 +642,8 @@ Item {
                                             var page = helpPageComponent.createObject(parent);
                                             openContextualMenuComponent(page)
                                         }
-                                        KeyNavigation.up: visibleChildren.length != 0 ? settingsMenuButton.getPreviousItem(5) : null
-                                        KeyNavigation.down: visibleChildren.length != 0 ? settingsMenuButton.getNextItem(5) : null
+                                        KeyNavigation.up: visibleChildren.length != 0 ? settingsMenuButton.getPreviousItem(4) : null
+                                        KeyNavigation.down: visibleChildren.length != 0 ? settingsMenuButton.getNextItem(4) : null
                                     }
                                     IconLabelButton {
                                         id: quitButton
@@ -632,8 +663,8 @@ Item {
                                                 }
                                             });
                                         }
-                                        KeyNavigation.up: visibleChildren.length != 0 ? settingsMenuButton.getPreviousItem(6) : null
-                                        KeyNavigation.down: visibleChildren.length != 0 ? settingsMenuButton.getNextItem(6) : null
+                                        KeyNavigation.up: visibleChildren.length != 0 ? settingsMenuButton.getPreviousItem(5) : null
+                                        KeyNavigation.down: visibleChildren.length != 0 ? settingsMenuButton.getNextItem(5) : null
                                     }
                                     Rectangle {
                                         Layout.fillWidth: true

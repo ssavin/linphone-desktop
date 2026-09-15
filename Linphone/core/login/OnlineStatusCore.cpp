@@ -70,6 +70,13 @@ void OnlineStatusCore::setAvailable(bool value) {
 	}
 }
 
+void OnlineStatusCore::setBusy(bool value) {
+	if (mBusy != value) {
+		mBusy = value;
+		emit busyChanged();
+	}
+}
+
 // Reads the default account's own SIP credentials (the same ones it
 // registers with) via Account::findAuthInfo() on the core thread, then
 // hands them back here on the App thread for the HTTP call.
@@ -124,10 +131,13 @@ void OnlineStatusCore::refresh() {
 }
 
 void OnlineStatusCore::toggle() {
+	if (mBusy) return;
 	const bool newValue = !mOnline;
+	setBusy(true);
 	withCredentials([this, newValue](const QString &username, const QString &password) {
 		if (username.isEmpty() || password.isEmpty()) {
 			setAvailable(false);
+			setBusy(false);
 			return;
 		}
 
@@ -142,6 +152,7 @@ void OnlineStatusCore::toggle() {
 		connect(reply, &QNetworkReply::finished, this, [this, reply]() {
 			reply->deleteLater();
 			QJsonObject obj = QJsonDocument::fromJson(reply->readAll()).object();
+			setBusy(false);
 			if (obj.contains(QStringLiteral("error"))) {
 				emit toggleFailed(obj.value(QStringLiteral("error")).toString());
 				return;

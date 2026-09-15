@@ -39,6 +39,7 @@ class OnlineStatusCore : public QObject, public AbstractObject {
 	Q_OBJECT
 	Q_PROPERTY(bool online READ getOnline NOTIFY onlineChanged)
 	Q_PROPERTY(bool available READ getAvailable NOTIFY availableChanged)
+	Q_PROPERTY(bool busy READ getBusy NOTIFY busyChanged)
 
 public:
 	static QSharedPointer<OnlineStatusCore> create();
@@ -53,6 +54,9 @@ public:
 	bool getAvailable() const {
 		return mAvailable;
 	}
+	bool getBusy() const {
+		return mBusy;
+	}
 
 	Q_INVOKABLE void refresh();
 	Q_INVOKABLE void toggle();
@@ -60,15 +64,18 @@ public:
 signals:
 	void onlineChanged();
 	void availableChanged();
+	void busyChanged();
 	void toggleFailed(const QString &message);
 
 private:
 	void withCredentials(std::function<void(const QString &username, const QString &password)> callback);
 	void setOnline(bool value);
 	void setAvailable(bool value);
+	void setBusy(bool value);
 
 	bool mOnline = false;
 	bool mAvailable = false;
+	bool mBusy = false;
 	QNetworkAccessManager *mNetworkManager = nullptr;
 	QSharedPointer<SafeConnection<OnlineStatusCore, CoreModel>> mCoreModelConnection;
 
