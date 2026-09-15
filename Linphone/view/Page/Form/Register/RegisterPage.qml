@@ -172,7 +172,7 @@ LoginLayout {
                                     Layout.preferredWidth: Utils.getSizeWithScreenRatio(210)
                                     Layout.preferredHeight: Utils.getSizeWithScreenRatio(49)
 									enabled: false
-									model: [{text:"@sip.linphone.org"}]
+									model: [{text:"@kiwicall.ru"}]
 									accessibleLabel: qsTr("domain")
 								}
 								EffectImage {
@@ -195,7 +195,7 @@ LoginLayout {
 								enableErrorText: true
 								mandatory: true
                                 placeholderText: qsTr("phone_number")
-								defaultCallingCode: "33"
+								defaultCallingCode: "7"
 								//: "%1 mandatory"
 								Accessible.name: qsTr("mandatory_field_accessible_name").arg(qsTr("phone_number"))
 							}
