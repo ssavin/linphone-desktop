@@ -73,6 +73,9 @@ class FriendCore : public QObject, public AbstractObject {
 	Q_PROPERTY(QString pictureUri READ getPictureUri WRITE setPictureUri NOTIFY pictureUriChanged)
 	Q_PROPERTY(bool starred READ getStarred WRITE lSetStarred NOTIFY starredChanged)
 	Q_PROPERTY(bool readOnly READ getReadOnly CONSTANT)
+	Q_PROPERTY(bool isKiwiShared READ isKiwiShared CONSTANT)
+	// CRM client id for contacts of the shared address book (0 for everyone else)
+	Q_PROPERTY(int kiwiClientId READ getKiwiClientId CONSTANT)
 	Q_PROPERTY(bool isLdap READ isLdap CONSTANT)
 	Q_PROPERTY(bool isAppFriend READ isAppFriend CONSTANT)
 	Q_PROPERTY(bool isCardDAV READ isCardDAV CONSTANT)
@@ -146,6 +149,8 @@ public:
 	bool isAppFriend() const;
 	bool isCardDAV() const;
 	bool getReadOnly() const;
+	bool isKiwiShared() const;
+	int getKiwiClientId() const;
 
 	std::shared_ptr<FriendModel> getModel();
 
@@ -210,6 +215,7 @@ protected:
 	QString mVCardString;
 	bool mIsLdap, mIsCardDAV, mIsAppFriend;
 	bool mIsKiwiShared = false;
+	int mKiwiClientId = 0;
 	std::shared_ptr<FriendModel> mFriendModel;
 	QSharedPointer<SafeConnection<FriendCore, FriendModel>> mFriendModelConnection;
 	QSharedPointer<SafeConnection<FriendCore, CoreModel>> mCoreModelConnection;

@@ -37,6 +37,7 @@ DEFINE_ABSTRACT_OBJECT(SharedContactsCore)
 namespace {
 constexpr char kContactsUrl[] = "https://kiwicall.ru/api/mobile/contacts";
 constexpr char kSuggestUrl[] = "https://kiwicall.ru/api/mobile/contacts/suggest";
+constexpr char kClientNameUrl[] = "https://kiwicall.ru/api/mobile/contacts/clients/%1/name";
 constexpr char kSharedListName[] = "kiwicall_shared";
 constexpr char kRefKeyPrefix[] = "kiwicall:";
 constexpr int kRetryIntervalMs = 30 * 1000;       // until the first successful sync
@@ -165,6 +166,34 @@ void SharedContactsCore::suggestContact(const QString &name, const QStringList &
 				if (--tally->remaining == 0) emit suggestFinished(tally->queued, tally->known, tally->failed);
 			});
 		}
+	});
+}
+
+void SharedContactsCore::renameClient(int clientId, const QString &name) {
+	withCredentials([this, clientId, name](const QString &username, const QString &password) {
+		if (username.isEmpty() || password.isEmpty()) {
+			emit renameFinished(false, QString());
+			return;
+		}
+		QNetworkRequest request{QUrl(QString::fromLatin1(kClientNameUrl).arg(clientId))};
+		request.setRawHeader("Authorization", basicAuthHeader(username, password));
+		request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/json"));
+		QJsonObject body;
+		body.insert(QStringLiteral("name"), name);
+
+		auto *reply = mNetworkManager->post(request, QJsonDocument(body).toJson(QJsonDocument::Compact));
+		connect(reply, &QNetworkReply::finished, this, [this, reply]() {
+			reply->deleteLater();
+			const QJsonObject obj = QJsonDocument::fromJson(reply->readAll()).object();
+			if (obj.value(QStringLiteral("status")).toString() == QStringLiteral("renamed")) {
+				emit renameFinished(true, QString());
+				mVersion.clear(); // force a full refresh so the new name shows up
+				syncNow();
+			} else {
+				const QString error = obj.value(QStringLiteral("error")).toString();
+				emit renameFinished(false, error);
+			}
+		});
 	});
 }
 

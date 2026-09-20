@@ -3291,6 +3291,41 @@ Only your correspondent can decrypt them.</translation>
     <name>ContactPage</name>
     <message>
         <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_rename_action</source>
+        <translation>Name this contact</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_rename_title</source>
+        <translation>Name this contact</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_rename_message</source>
+        <translation>Enter a name for %1. It will be saved in the shared address book and shown to all operators.</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_rename_done</source>
+        <translation>Name saved in the shared address book</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_rename_failed</source>
+        <translation>The name was not saved. Check your connection and try again</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_shared_hint_unnamed</source>
+        <translation>Contact from the KiwiCall shared address book. It has no name yet, use "Name this contact".</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_shared_hint</source>
+        <translation>Contact from the KiwiCall shared address book. It can be edited in the kiwicall.ru cabinet, section "Clients".</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
         <source>contact_details_suggest</source>
         <translation>Add to shared address book</translation>
     </message>

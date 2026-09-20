@@ -104,6 +104,13 @@ FriendCore::FriendCore(const std::shared_ptr<linphone::Friend> &contact, bool is
 		mIsCardDAV = (sourceFlags & (int)linphone::MagicSearch::Source::RemoteCardDAV) != 0;
 		mIsAppFriend = ToolModel::friendIsInFriendList(ToolModel::getAppFriendList(), contact);
 		mIsKiwiShared = ToolModel::friendIsInFriendList(ToolModel::getFriendList("kiwicall_shared"), contact);
+		mKiwiClientId = 0;
+		if (mIsKiwiShared) {
+			// refKey is "kiwicall:cli:<id>" for CRM clients, "kiwicall:emp:<ext>" for colleagues
+			const auto refKey = Utils::coreStringToAppString(contact->getRefKey());
+			const QString clientPrefix = QStringLiteral("kiwicall:cli:");
+			if (refKey.startsWith(clientPrefix)) mKiwiClientId = refKey.mid(clientPrefix.size()).toInt();
+		}
 	} else {
 		mIsSaved = false;
 		mStarred = false;
@@ -733,6 +740,14 @@ bool FriendCore::isCardDAV() const {
 
 bool FriendCore::isAppFriend() const {
 	return mIsAppFriend;
+}
+
+bool FriendCore::isKiwiShared() const {
+	return mIsKiwiShared;
+}
+
+int FriendCore::getKiwiClientId() const {
+	return mKiwiClientId;
 }
 
 bool FriendCore::getReadOnly() const {

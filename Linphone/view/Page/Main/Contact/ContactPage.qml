@@ -110,6 +110,81 @@ AbstractMainPage {
     showDefaultItem: rightPanelStackView.depth == 0 && !contactList.haveContacts
                      && searchBar.text.length === 0
 
+    // Contacts of the shared address book are read-only, except that a client
+    // whose name is just a phone number can be given a name (saved in the CRM).
+    function isRenameable(contact) {
+        return !!contact && contact.core.isKiwiShared && contact.core.kiwiClientId > 0
+               && /^[+\d\s()\-]*$/.test(contact.core.fullName)
+    }
+
+    function renameSharedContact(contact) {
+        if (!isRenameable(contact))
+            return
+        renameDialog.clientId = contact.core.kiwiClientId
+        renameDialog.phone = contact.core.fullName
+        renameDialog.open()
+    }
+
+    Dialog {
+        id: renameDialog
+        property int clientId: 0
+        property string phone
+        padding: Utils.getSizeWithScreenRatio(30)
+        width: Utils.getSizeWithScreenRatio(637)
+        anchors.centerIn: parent
+        closePolicy: Control.Popup.CloseOnEscape
+        modal: true
+        onAboutToShow: renameField.text = ""
+        onOpened: renameField.forceActiveFocus()
+        title: qsTr("contact_rename_title")
+        text: qsTr("contact_rename_message").arg(renameDialog.phone)
+        content: TextField {
+            id: renameField
+            width: Utils.getSizeWithScreenRatio(577)
+            height: Utils.getSizeWithScreenRatio(49)
+            backgroundColor: DefaultStyle.grey_0
+            backgroundBorderColor: DefaultStyle.grey_200
+            onAccepted: renameSave.clicked()
+        }
+        buttons: RowLayout {
+            Item {
+                Layout.fillWidth: true
+            }
+            RowLayout {
+                spacing: Utils.getSizeWithScreenRatio(15)
+                BigButton {
+                    style: ButtonStyle.secondary
+                    text: qsTr("cancel")
+                    onClicked: renameDialog.close()
+                }
+                BigButton {
+                    id: renameSave
+                    style: ButtonStyle.main
+                    text: qsTr("save")
+                    enabled: renameField.text.trim().length >= 2
+                    onClicked: {
+                        if (!enabled) return
+                        SharedContactsCpp.renameClient(renameDialog.clientId, renameField.text.trim())
+                        renameDialog.close()
+                    }
+                }
+            }
+        }
+    }
+
+    Connections {
+        target: SharedContactsCpp
+        function onRenameFinished(ok, message) {
+            var mainWin = UtilsCpp.getMainWindow()
+            if (ok)
+                UtilsCpp.showInformationPopup(qsTr("contact_suggest_title_short"), qsTr("contact_rename_done"))
+            else
+                UtilsCpp.showInformationPopup(qsTr("information_popup_error_title"),
+                                              message.length > 0 ? message : qsTr("contact_rename_failed"),
+                                              false, mainWin)
+        }
+    }
+
     // Opt-in: send this contact's name and numbers to the admin's moderation
     // queue for the shared address book. Nothing is sent before confirmation.
     function suggestContact(contact) {
@@ -444,11 +519,14 @@ AbstractMainPage {
                 contact: mainItem.selectedContact
                 button.color: DefaultStyle.main1_100
                 //: Edit
-                button.text: qsTr("contact_details_edit")
+                button.text: mainItem.isRenameable(mainItem.selectedContact) ? qsTr("contact_rename_action") : qsTr("contact_details_edit")
                 button.style: ButtonStyle.tertiary
                 button.icon.source: AppIcons.pencil
-                button.onClicked: mainItem.editContact(mainItem.selectedContact)
-                button.visible: mainItem.selectedContact && mainItem.selectedContact.core.isStored && !mainItem.selectedContact.core.readOnly
+                button.onClicked: mainItem.isRenameable(mainItem.selectedContact)
+                                  ? mainItem.renameSharedContact(mainItem.selectedContact)
+                                  : mainItem.editContact(mainItem.selectedContact)
+                button.visible: mainItem.selectedContact && ((mainItem.selectedContact.core.isStored && !mainItem.selectedContact.core.readOnly)
+                                                             || mainItem.isRenameable(mainItem.selectedContact))
                 property string contactAddress: contact ? contact.core.defaultAddress : ""
                 property var computedContactNameObj: UtilsCpp.getDisplayName(contactAddress)
                 property string computedContactName: computedContactNameObj ? computedContactNameObj.value : ""
@@ -950,6 +1028,17 @@ AbstractMainPage {
                                 // 	Layout.preferredHeight: Utils.getSizeWithScreenRatio(1)
                                 // 	color: DefaultStyle.main2_200
                                 // }
+                                Text {
+                                    Layout.fillWidth: true
+                                    Layout.topMargin: Utils.getSizeWithScreenRatio(10)
+                                    visible: mainItem.selectedContact && mainItem.selectedContact.core.isKiwiShared
+                                    wrapMode: Text.WordWrap
+                                    color: DefaultStyle.main2_600
+                                    font.pixelSize: Utils.getSizeWithScreenRatio(14)
+                                    text: mainItem.isRenameable(mainItem.selectedContact)
+                                          ? qsTr("contact_shared_hint_unnamed")
+                                          : qsTr("contact_shared_hint")
+                                }
                                 ColumnLayout {
                                     visible: mainItem.selectedContact && mainItem.selectedContact.core.isStored && !mainItem.selectedContact.core.readOnly
                                     Rectangle {

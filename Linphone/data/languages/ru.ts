@@ -2887,6 +2887,41 @@ Error</extracomment>
     <name>ContactPage</name>
     <message>
         <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_rename_action</source>
+        <translation>Назвать контакт</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_rename_title</source>
+        <translation>Назвать контакт</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_rename_message</source>
+        <translation>Введите имя для номера %1. Оно сохранится в общей книге и станет видно всем операторам.</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_rename_done</source>
+        <translation>Имя сохранено в общей книге</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_rename_failed</source>
+        <translation>Не удалось сохранить имя. Проверьте соединение и повторите</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_shared_hint_unnamed</source>
+        <translation>Контакт из общей книги KiwiCall. У него пока нет имени, нажмите «Назвать контакт».</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_shared_hint</source>
+        <translation>Контакт из общей книги KiwiCall. Изменить его можно в кабинете kiwicall.ru, раздел «Клиенты».</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
         <source>contact_details_suggest</source>
         <translation>В общую книгу</translation>
     </message>

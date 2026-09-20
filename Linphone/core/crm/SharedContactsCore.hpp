@@ -63,8 +63,14 @@ public:
 	// clinic admin's moderation queue. Emits suggestFinished(queued, known, failed).
 	Q_INVOKABLE void suggestContact(const QString &name, const QStringList &phones);
 
+	// "Назвать контакт": gives a name to a shared client that only has a phone
+	// number as its name. On success the address book is re-synced.
+	Q_INVOKABLE void renameClient(int clientId, const QString &name);
+
 signals:
 	void suggestFinished(int queued, int known, int failed);
+	// message is a user-facing error text when ok is false
+	void renameFinished(bool ok, const QString &message);
 	void syncingChanged();
 	void syncFinished(int added, int updated, int removed);
 	void syncFailed(const QString &message);
