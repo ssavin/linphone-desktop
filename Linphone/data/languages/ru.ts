@@ -6337,31 +6337,31 @@ Failed to create 1-1 conversation with %1 !</extracomment>
         <location filename="../../view/Page/Main/Start/WelcomePage.qml" line="83"/>
         <source>welcome_page_1_message</source>
         <extracomment>&quot;Une application de communication &lt;b&gt;sécurisée&lt;/b&gt;,&lt;br&gt; &lt;b&gt;open source&lt;/b&gt; et &lt;b&gt;française&lt;/b&gt;.&quot;</extracomment>
-        <translation>&lt;b&gt;Защищенное&lt;b&gt;коммуникационное приложение с&lt;br&gt; &lt;/b&gt; открытым исходным кодом&lt;/b&gt; на &lt;/b&gt; французском&lt;/b&gt; языке.</translation>
+        <translation>Звонки колл-центра, карточка клиента и общая адресная книга &lt;b&gt;в одном приложении&lt;/b&gt;.</translation>
     </message>
     <message>
         <location filename="../../view/Page/Main/Start/WelcomePage.qml" line="85"/>
         <source>welcome_page_2_title</source>
         <extracomment>&quot;Sécurisé&quot;</extracomment>
-        <translation>Обезопасить</translation>
+        <translation>Карточка клиента</translation>
     </message>
     <message>
         <location filename="../../view/Page/Main/Start/WelcomePage.qml" line="87"/>
         <source>welcome_page_2_message</source>
         <extracomment>&quot;Vos communications sont en sécurité grâce aux &lt;br&gt;&lt;b&gt;Chiffrement de bout en bout&lt;/b&gt;.&quot;</extracomment>
-        <translation>Ваши сообщения защищены благодаря &lt;br&gt;&lt;b&gt;сквозному шифрованию&lt;/b&gt;.</translation>
+        <translation>При входящем звонке сразу видно, &lt;b&gt;кто звонит&lt;/b&gt;: имя, история обращений и записи.</translation>
     </message>
     <message>
         <location filename="../../view/Page/Main/Start/WelcomePage.qml" line="89"/>
         <source>welcome_page_3_title</source>
         <extracomment>&quot;Open Source&quot;</extracomment>
-        <translation>С открытым исходным кодом</translation>
+        <translation>Общая книга</translation>
     </message>
     <message>
         <location filename="../../view/Page/Main/Start/WelcomePage.qml" line="91"/>
         <source>welcome_page_3_message</source>
         <extracomment>&quot;Une application open source et un &lt;b&gt;service gratuit&lt;/b&gt; &lt;br&gt;depuis &lt;b&gt;2001&lt;/b&gt;&quot;</extracomment>
-        <translation>Приложение с открытым исходным кодом и &lt;b&gt;бесплатный сервис &lt;b&gt; &lt;br&gt; с &lt;b&gt;2001 года&lt;/b&gt;</translation>
+        <translation>Коллеги и клиенты вашей клиники в одном месте, &lt;b&gt;на всех устройствах&lt;/b&gt;.</translation>
     </message>
     <message>
         <location filename="../../view/Page/Main/Start/WelcomePage.qml" line="122"/>

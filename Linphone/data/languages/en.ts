@@ -7380,31 +7380,31 @@ Error in the chat</extracomment>
         <location filename="../../view/Page/Main/Start/WelcomePage.qml" line="84"/>
         <source>welcome_page_1_message</source>
         <extracomment>&quot;Une application de communication &lt;b&gt;sécurisée&lt;/b&gt;,&lt;br&gt; &lt;b&gt;open source&lt;/b&gt; et &lt;b&gt;française&lt;/b&gt;.&quot;</extracomment>
-        <translation>A &lt;b&gt;secured&lt;/b&gt;,&lt;br&gt; &lt;b&gt;open source&lt;/b&gt; and &lt;b&gt;French&lt;/b&gt; communication application.</translation>
+        <translation>Call center calls, client cards and a shared address book &lt;b&gt;in one app&lt;/b&gt;.</translation>
     </message>
     <message>
         <location filename="../../view/Page/Main/Start/WelcomePage.qml" line="86"/>
         <source>welcome_page_2_title</source>
         <extracomment>&quot;Sécurisé&quot;</extracomment>
-        <translation>Secured</translation>
+        <translation>Client card</translation>
     </message>
     <message>
         <location filename="../../view/Page/Main/Start/WelcomePage.qml" line="88"/>
         <source>welcome_page_2_message</source>
         <extracomment>&quot;Vos communications sont en sécurité grâce aux &lt;br&gt;&lt;b&gt;Chiffrement de bout en bout&lt;/b&gt;.&quot;</extracomment>
-        <translation>Your communications are secure thanks to &lt;br&gt;&lt;b&gt;End-to-end encryption&lt;/b&gt;.</translation>
+        <translation>When someone calls, you see &lt;b&gt;who it is&lt;/b&gt;: name, history and appointments.</translation>
     </message>
     <message>
         <location filename="../../view/Page/Main/Start/WelcomePage.qml" line="90"/>
         <source>welcome_page_3_title</source>
         <extracomment>&quot;Open Source&quot;</extracomment>
-        <translation>Open Source</translation>
+        <translation>Shared address book</translation>
     </message>
     <message>
         <location filename="../../view/Page/Main/Start/WelcomePage.qml" line="92"/>
         <source>welcome_page_3_message</source>
         <extracomment>&quot;Une application open source et un &lt;b&gt;service gratuit&lt;/b&gt; &lt;br&gt;depuis &lt;b&gt;2001&lt;/b&gt;&quot;</extracomment>
-        <translation>An open source application and a &lt;b&gt;free service&lt;/b&gt; &lt;br&gt;since &lt;b&gt;2001&lt;/b&gt;</translation>
+        <translation>Colleagues and clients of your clinic in one place, &lt;b&gt;on every device&lt;/b&gt;.</translation>
     </message>
     <message>
         <location filename="../../view/Page/Main/Start/WelcomePage.qml" line="125"/>
