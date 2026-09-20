@@ -6,6 +6,7 @@ import Linphone
 import UtilsCpp
 import EnumsToStringCpp
 import SettingsCpp
+import SharedContactsCpp
 import CustomControls 1.0
 import "qrc:/qt/qml/Linphone/view/Style/buttonStyle.js" as ButtonStyle
 import "qrc:/qt/qml/Linphone/view/Control/Tool/Helper/utils.js" as Utils
@@ -108,6 +109,44 @@ AbstractMainPage {
     // rightPanelStackView.initialItem: contactDetail
     showDefaultItem: rightPanelStackView.depth == 0 && !contactList.haveContacts
                      && searchBar.text.length === 0
+
+    // Opt-in: send this contact's name and numbers to the admin's moderation
+    // queue for the shared address book. Nothing is sent before confirmation.
+    function suggestContact(contact) {
+        if (!contact)
+            return
+        var phones = []
+        var list = contact.core.phoneNumbers
+        for (var i = 0; i < list.length; ++i)
+            if (list[i].address && list[i].address.length > 0)
+                phones.push(list[i].address)
+        var mainWin = UtilsCpp.getMainWindow()
+        if (phones.length === 0) {
+            UtilsCpp.showInformationPopup(qsTr("information_popup_error_title"),
+                                          qsTr("contact_suggest_no_phone"), false, mainWin)
+            return
+        }
+        var name = contact.core.fullName
+        mainWin.showConfirmationLambdaPopup(
+                    qsTr("contact_suggest_title").arg(name),
+                    qsTr("contact_suggest_message").arg(phones.join(", ")), "",
+                    function (confirmed) {
+                        if (confirmed) SharedContactsCpp.suggestContact(name, phones)
+                    })
+    }
+
+    Connections {
+        target: SharedContactsCpp
+        function onSuggestFinished(queued, known, failed) {
+            var mainWin = UtilsCpp.getMainWindow()
+            if (failed > 0 && queued === 0 && known === 0)
+                UtilsCpp.showInformationPopup(qsTr("information_popup_error_title"),
+                                              qsTr("contact_suggest_failed"), false, mainWin)
+            else
+                UtilsCpp.showInformationPopup(qsTr("contact_suggest_title_short"),
+                                              queued > 0 ? qsTr("contact_suggest_sent") : qsTr("contact_suggest_known"))
+        }
+    }
 
     function deleteContact(contact) {
         if (!contact)
@@ -911,6 +950,21 @@ AbstractMainPage {
                                 // 	Layout.preferredHeight: Utils.getSizeWithScreenRatio(1)
                                 // 	color: DefaultStyle.main2_200
                                 // }
+                                ColumnLayout {
+                                    visible: mainItem.selectedContact && mainItem.selectedContact.core.isStored && !mainItem.selectedContact.core.readOnly
+                                    Rectangle {
+                                        Layout.fillWidth: true
+                                        Layout.preferredHeight: Utils.getSizeWithScreenRatio(1)
+                                        color: DefaultStyle.main2_200
+                                    }
+                                    IconLabelButton {
+                                        Layout.fillWidth: true
+                                        Layout.preferredHeight: Utils.getSizeWithScreenRatio(50)
+                                        icon.source: AppIcons.userPlus
+                                        text: qsTr("contact_details_suggest")
+                                        onClicked: mainItem.suggestContact(mainItem.selectedContact)
+                                    }
+                                }
                                 ColumnLayout {
                                     visible: mainItem.selectedContact && mainItem.selectedContact.core.isStored && !mainItem.selectedContact.core.readOnly
                                     Rectangle {

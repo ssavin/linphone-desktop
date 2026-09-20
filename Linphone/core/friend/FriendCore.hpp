@@ -209,6 +209,7 @@ protected:
 	bool mIsStored;
 	QString mVCardString;
 	bool mIsLdap, mIsCardDAV, mIsAppFriend;
+	bool mIsKiwiShared = false;
 	std::shared_ptr<FriendModel> mFriendModel;
 	QSharedPointer<SafeConnection<FriendCore, FriendModel>> mFriendModelConnection;
 	QSharedPointer<SafeConnection<FriendCore, CoreModel>> mCoreModelConnection;

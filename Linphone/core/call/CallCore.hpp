@@ -23,6 +23,7 @@
 
 #include "core/conference/ConferenceCore.hpp"
 #include "core/conference/ConferenceGui.hpp"
+#include "core/crm/CrmCardCore.hpp"
 #include "core/videoSource/VideoSourceDescriptorGui.hpp"
 #include "model/call/CallModel.hpp"
 #include "model/search/MagicSearchModel.hpp"
@@ -136,6 +137,9 @@ public:
 	Q_PROPERTY(ZrtpStats zrtpStats READ getZrtpStats WRITE setZrtpStats NOTIFY zrtpStatsChanged)
 	Q_PROPERTY(AudioStats audioStats READ getAudioStats WRITE setAudioStats NOTIFY audioStatsChanged)
 	Q_PROPERTY(VideoStats videoStats READ getVideoStats WRITE setVideoStats NOTIFY videoStatsChanged)
+	// "Шторка звонка": KiwiCall CRM card for the remote party, looked up by
+	// phone number on incoming calls - see CrmCardCore.
+	Q_PROPERTY(CrmCardCore *crmCard READ getCrmCardCore CONSTANT)
 
 	DECLARE_GUI_GETSET(bool, isStarted, IsStarted)
 
@@ -185,6 +189,7 @@ public:
 
 	ConferenceGui *getConferenceGui() const;
 	QSharedPointer<ConferenceCore> getConferenceCore() const;
+	CrmCardCore *getCrmCardCore() const;
 	void setConference(const QSharedPointer<ConferenceCore> &conference);
 	void setIsConference(bool isConf);
 
@@ -247,6 +252,7 @@ public:
 	void setVideoStats(VideoStats stats);
 
 	void findRemoteFriend(QSharedPointer<CallCore> me);
+	void findCrmCard(QSharedPointer<CallCore> me);
 
 signals:
 	void statusChanged(LinphoneEnums::CallStatus status);
@@ -360,6 +366,7 @@ private:
 	ZrtpStats mZrtpStats;
 	AudioStats mAudioStats;
 	VideoStats mVideoStats;
+	QSharedPointer<CrmCardCore> mCrmCard;
 	std::shared_ptr<MagicSearchModel> mRemoteMagicSearchModel;
 	bool mShouldFindRemoteFriend;
 	QSharedPointer<SafeConnection<CallCore, MagicSearchModel>> mRemoteMagicSearchModelConnection;

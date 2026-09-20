@@ -2886,6 +2886,46 @@ Error</extracomment>
 <context>
     <name>ContactPage</name>
     <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_details_suggest</source>
+        <translation>В общую книгу</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_suggest_title</source>
+        <translation>Предложить «%1» в общую книгу?</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_suggest_title_short</source>
+        <translation>Общая книга</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_suggest_message</source>
+        <translation>Администратору на проверку уйдут только имя и номера: %1. Остальные данные контакта останутся на этом компьютере.</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_suggest_no_phone</source>
+        <translation>У контакта нет номера телефона</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_suggest_sent</source>
+        <translation>Отправлено администратору на проверку</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_suggest_known</source>
+        <translation>Этот номер уже есть в общей книге</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_suggest_failed</source>
+        <translation>Не удалось отправить контакт. Проверьте соединение и повторите</translation>
+    </message>
+    <message>
         <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="14"/>
         <source>contacts_add</source>
         <extracomment>&quot;Ajouter un contact&quot;</extracomment>
@@ -4955,6 +4995,16 @@ Error</extracomment>
         <source>call_audio_incoming</source>
         <extracomment>&quot;Appel entrant&quot;</extracomment>
         <translation>Входящий звонок</translation>
+    </message>
+    <message>
+        <location filename="../../view/Control/Popup/Notification/NotificationReceivedCall.qml" line="1"/>
+        <source>crm_card_loading</source>
+        <translation>Ищем карточку клиента...</translation>
+    </message>
+    <message>
+        <location filename="../../view/Control/Popup/Notification/NotificationReceivedCall.qml" line="1"/>
+        <source>crm_card_visits_count</source>
+        <translation>%1 визитов</translation>
     </message>
     <message>
         <location filename="../../view/Control/Popup/Notification/NotificationReceivedCall.qml" line="117"/>

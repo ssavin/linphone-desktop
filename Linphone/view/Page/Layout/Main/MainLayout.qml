@@ -8,6 +8,7 @@ import Linphone
 import UtilsCpp
 import SettingsCpp
 import OnlineStatusCpp
+import SharedContactsCpp
 import DesktopToolsCpp
 import "qrc:/qt/qml/Linphone/view/Control/Tool/Helper/utils.js" as Utils
 import "qrc:/qt/qml/Linphone/view/Style/buttonStyle.js" as ButtonStyle
@@ -38,6 +39,7 @@ Item {
     // - offer the one-line registry fix once, same pattern as the Android
     // battery-optimization-exemption dialog.
     Component.onCompleted: {
+        SharedContactsCpp.start()
         if (Qt.platform.os === "windows" && DesktopToolsCpp.shouldOfferAudioDuckingFix()) {
             UtilsCpp.getMainWindow().showConfirmationLambdaPopup("",
                 //: "Другие звуки во время звонков"

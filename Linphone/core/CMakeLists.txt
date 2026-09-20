@@ -18,6 +18,8 @@ list(APPEND _LINPHONEAPP_SOURCES
 	core/call-history/CallHistoryProxy.cpp
 	core/camera/CameraGui.cpp
 	core/camera/CameraDummy.cpp
+	core/crm/CrmCardCore.cpp
+	core/crm/SharedContactsCore.cpp
 	core/chat/ChatCore.cpp
 	core/chat/ChatGui.cpp
 	core/chat/ChatList.cpp

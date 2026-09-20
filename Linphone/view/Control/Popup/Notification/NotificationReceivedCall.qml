@@ -102,6 +102,44 @@ Notification {
 						}
 					}
 				}
+				// "Шторка звонка": CRM card for the caller, looked up by
+				// CrmCardCore (see CallCore::findCrmCard). Kept intentionally
+				// minimal here (name + visit count) - the in-call window shows
+				// the fuller card (recent calls, appointments).
+				ColumnLayout {
+					id: crmCardSection
+					readonly property var crmCard: mainItem.call && mainItem.call.core.crmCard
+					Layout.alignment: Qt.AlignHCenter
+					Layout.fillWidth: true
+					spacing: Utils.getSizeWithScreenRatio(2)
+					visible: crmCard && (crmCard.loading || crmCard.found)
+					Text {
+						visible: crmCardSection.crmCard && crmCardSection.crmCard.loading
+						//: "Ищем карточку клиента..."
+						text: qsTr("crm_card_loading")
+						Layout.alignment: Qt.AlignHCenter
+						color: DefaultStyle.grey_200
+						font.pixelSize: Utils.getSizeWithScreenRatio(12)
+					}
+					Text {
+						visible: crmCardSection.crmCard && !crmCardSection.crmCard.loading && crmCardSection.crmCard.found
+						text: crmCardSection.crmCard ? crmCardSection.crmCard.clientName : ""
+						Layout.alignment: Qt.AlignHCenter
+						color: DefaultStyle.grey_0
+						font {
+							pixelSize: Utils.getSizeWithScreenRatio(13)
+							weight: Typography.b3.weight
+						}
+					}
+					Text {
+						visible: crmCardSection.crmCard && !crmCardSection.crmCard.loading && crmCardSection.crmCard.found
+						//: "%1 визитов"
+						text: qsTr("crm_card_visits_count").arg(crmCardSection.crmCard ? crmCardSection.crmCard.visitsCount : 0)
+						Layout.alignment: Qt.AlignHCenter
+						color: DefaultStyle.grey_200
+						font.pixelSize: Utils.getSizeWithScreenRatio(12)
+					}
+				}
 				RowLayout {
 					Layout.alignment: Qt.AlignHCenter
 					Layout.fillWidth: true

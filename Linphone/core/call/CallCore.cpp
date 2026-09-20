@@ -521,6 +521,19 @@ void CallCore::setSelf(QSharedPointer<CallCore> me) {
 	});
 
 	if (mShouldFindRemoteFriend) findRemoteFriend(me);
+	if (mDir == LinphoneEnums::CallDir::Incoming) findCrmCard(me);
+}
+
+// "Шторка звонка": look up the KiwiCall CRM card for the caller as soon
+// as the call object exists - triggered from setSelf() next to
+// findRemoteFriend(), same convention, so the lookup is already in
+// flight before NotificationReceivedCall.qml even renders. Outgoing
+// calls don't need this - the operator already knows who they're
+// calling.
+void CallCore::findCrmCard(QSharedPointer<CallCore> me) {
+	mustBeInLinphoneThread(log().arg(Q_FUNC_INFO));
+	mCrmCard = CrmCardCore::create();
+	mCrmCard->lookup(mRemoteUsername);
 }
 
 DEFINE_GET_SET_API(CallCore, bool, isStarted, IsStarted)
@@ -687,6 +700,10 @@ void CallCore::setIsMismatch(bool mismatch) {
 
 ConferenceGui *CallCore::getConferenceGui() const {
 	return mConference ? new ConferenceGui(mConference) : nullptr;
+}
+
+CrmCardCore *CallCore::getCrmCardCore() const {
+	return mCrmCard.get();
 }
 
 QSharedPointer<ConferenceCore> CallCore::getConferenceCore() const {

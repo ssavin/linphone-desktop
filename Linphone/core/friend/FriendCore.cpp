@@ -103,6 +103,7 @@ FriendCore::FriendCore(const std::shared_ptr<linphone::Friend> &contact, bool is
 		          (sourceFlags & (int)linphone::MagicSearch::Source::LdapServers) != 0;
 		mIsCardDAV = (sourceFlags & (int)linphone::MagicSearch::Source::RemoteCardDAV) != 0;
 		mIsAppFriend = ToolModel::friendIsInFriendList(ToolModel::getAppFriendList(), contact);
+		mIsKiwiShared = ToolModel::friendIsInFriendList(ToolModel::getFriendList("kiwicall_shared"), contact);
 	} else {
 		mIsSaved = false;
 		mStarred = false;
@@ -239,7 +240,7 @@ void FriendCore::setSelf(QSharedPointer<FriendCore> me) {
 			    });
 			mCoreModelConnection->makeConnectToCore(&FriendCore::saved, [this]() {
 				mCoreModelConnection->invokeToModel(
-				    [this, f = mFriendModel->getFriend()]() { emit CoreModel::getInstance()->friendUpdated(f); });
+				    [this, f = mFriendModel->getFriend()]() { emit CoreModel::getInstance() -> friendUpdated(f); });
 			});
 
 		} else { // Create
@@ -667,7 +668,7 @@ void FriendCore::save() { // Save Values to model
 						thisCopy->writeIntoModel(mFriendModel);
 						thisCopy->deleteLater();
 						mVCardString = mFriendModel->getVCardAsString();
-						emit CoreModel::getInstance()->friendUpdated(contact);
+						emit CoreModel::getInstance() -> friendUpdated(contact);
 						mCoreModelConnection->invokeToCore([this] {
 							setIsSaved(true);
 							emit saved();
@@ -694,7 +695,7 @@ void FriendCore::save() { // Save Values to model
 							if (listWhereToAddFriend->getType() == linphone::FriendList::Type::CardDAV) {
 								listWhereToAddFriend->synchronizeFriendsFromServer();
 							}
-							emit CoreModel::getInstance()->friendCreated(contact);
+							emit CoreModel::getInstance() -> friendCreated(contact);
 						}
 						mCoreModelConnection->invokeToCore([this, created]() {
 							if (created) setSelf(mCoreModelConnection->mCore);
@@ -735,8 +736,8 @@ bool FriendCore::isAppFriend() const {
 }
 
 bool FriendCore::getReadOnly() const {
-	return isLdap() || isCardDAV(); // TODO add conditions for friends retrieved via HTTP
-	                                // [misc]vcards-contacts-list=<URL> & CardDAV
+	return isLdap() || isCardDAV() || mIsKiwiShared; // TODO add conditions for friends retrieved via HTTP
+	                                                 // [misc]vcards-contacts-list=<URL> & CardDAV
 }
 
 std::shared_ptr<FriendModel> FriendCore::getModel() {

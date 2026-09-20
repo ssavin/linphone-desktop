@@ -64,6 +64,7 @@
 #include "core/conference/ConferenceGui.hpp"
 #include "core/conference/ConferenceInfoGui.hpp"
 #include "core/conference/ConferenceInfoProxy.hpp"
+#include "core/crm/SharedContactsCore.hpp"
 #include "core/emoji/EmojiProxy.hpp"
 #include "core/fps-counter/FPSCounter.hpp"
 #include "core/friend/ContactImportCore.hpp"
@@ -1042,6 +1043,13 @@ void App::initCppInterfaces() {
 		    static QSharedPointer<OnlineStatusCore> onlineStatus = OnlineStatusCore::create();
 		    App::getInstance()->mEngine->setObjectOwnership(onlineStatus.get(), QQmlEngine::CppOwnership);
 		    return onlineStatus.get();
+	    });
+
+	qmlRegisterSingletonType<SharedContactsCore>(
+	    "SharedContactsCpp", 1, 0, "SharedContactsCpp", [](QQmlEngine *engine, QJSEngine *) -> QObject * {
+		    static QSharedPointer<SharedContactsCore> sharedContacts = SharedContactsCore::create();
+		    App::getInstance()->mEngine->setObjectOwnership(sharedContacts.get(), QQmlEngine::CppOwnership);
+		    return sharedContacts.get();
 	    });
 
 	qmlRegisterSingletonType<AccessibilityHelper>(

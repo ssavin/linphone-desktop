@@ -3290,6 +3290,46 @@ Only your correspondent can decrypt them.</translation>
 <context>
     <name>ContactPage</name>
     <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_details_suggest</source>
+        <translation>Add to shared address book</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_suggest_title</source>
+        <translation>Add %1 to the shared address book?</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_suggest_title_short</source>
+        <translation>Shared address book</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_suggest_message</source>
+        <translation>Only the name and these numbers will be sent to your administrator for review: %1. Other contact data stays on this computer.</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_suggest_no_phone</source>
+        <translation>This contact has no phone number</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_suggest_sent</source>
+        <translation>Sent to the administrator for review</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_suggest_known</source>
+        <translation>This number is already in the shared address book</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="1"/>
+        <source>contact_suggest_failed</source>
+        <translation>The contact was not sent. Check your connection and try again</translation>
+    </message>
+    <message>
         <location filename="../../view/Page/Main/Contact/ContactPage.qml" line="16"/>
         <source>contacts_add</source>
         <extracomment>&quot;Ajouter un contact&quot;</extracomment>
@@ -5595,6 +5635,16 @@ Expiration : %1</translation>
         <source>call_audio_incoming</source>
         <extracomment>&quot;Appel entrant&quot;</extracomment>
         <translation>Incoming call</translation>
+    </message>
+    <message>
+        <location filename="../../view/Control/Popup/Notification/NotificationReceivedCall.qml" line="1"/>
+        <source>crm_card_loading</source>
+        <translation>Looking up client card...</translation>
+    </message>
+    <message>
+        <location filename="../../view/Control/Popup/Notification/NotificationReceivedCall.qml" line="1"/>
+        <source>crm_card_visits_count</source>
+        <translation>%1 visits</translation>
     </message>
     <message>
         <location filename="../../view/Control/Popup/Notification/NotificationReceivedCall.qml" line="118"/>
