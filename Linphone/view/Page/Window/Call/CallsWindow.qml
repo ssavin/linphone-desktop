@@ -788,6 +788,8 @@ AbstractWindow {
                             if (!rightPanel.contentLoader.item || rightPanel.contentLoader.item.objectName !== "callTransferPanel") transferCallButton.checked = false
                             if (!rightPanel.contentLoader.item || rightPanel.contentLoader.item.objectName !== "newCallPanel") newCallButton.checked = false
                             if (!rightPanel.contentLoader.item || rightPanel.contentLoader.item.objectName !== "callListPanel") callListButton.checked = false
+                            if (!rightPanel.contentLoader.item || rightPanel.contentLoader.item.objectName !== "dialerPanel") dialerButton.checked = false
+                            else dialerButton.checked = true
                             if (!rightPanel.contentLoader.item || rightPanel.contentLoader.item.objectName !== "screencastPanel") screencastPanelButton.checked = false
                             if (!rightPanel.contentLoader.item || rightPanel.contentLoader.item.objectName !== "chatPanel") chatPanelButton.checked = false
                             if (!rightPanel.contentLoader.item || rightPanel.contentLoader.item.objectName !== "participantListPanel") participantListButton.checked = false
@@ -1469,7 +1471,7 @@ AbstractWindow {
                         style: ButtonStyle.phoneRedLightBorder
                         Layout.column: mainWindow.startingCall ? 0 : bottomButtonsLayout.columns - 1
                         KeyNavigation.tab: mainWindow.startingCall ? (acceptCallButton.visible ? acceptCallButton : videoCameraButton.visible && videoCameraButton.enabled ? videoCameraButton : audioMicrophoneButton) : openStatisticPanelButton
-                        KeyNavigation.backtab: mainWindow.startingCall ? rightPanel.visible ? Utils.getLastFocusableItemInItem(rightPanel) : nextItemInFocusChain(false): callListButton
+                        KeyNavigation.backtab: mainWindow.startingCall ? rightPanel.visible ? Utils.getLastFocusableItemInItem(rightPanel) : nextItemInFocusChain(false): dialerButton
                         onClicked: {
                             mainWindow.callTerminatedByUser = true
                             mainWindow.endCall(mainWindow.call)
@@ -1582,6 +1584,28 @@ AbstractWindow {
                             if (checked) {
                                 rightPanel.visible = true
                                 rightPanel.replace(callListPanel)
+                            } else {
+                                rightPanel.visible = false
+                            }
+                        }
+                        KeyNavigation.tab: mainWindow.startingCall ? nextItemInFocusChain() : dialerButton
+                    }
+
+                    // Keypad button (DTMF, e.g. IVR menus)
+                    CheckableButton {
+                        id: dialerButton
+                        Layout.preferredWidth: Utils.getSizeWithScreenRatio(55)
+                        Layout.preferredHeight: Utils.getSizeWithScreenRatio(55)
+                        checkable: true
+                        icon.source: AppIcons.dialer
+                        icon.width: Utils.getSizeWithScreenRatio(32)
+                        icon.height: Utils.getSizeWithScreenRatio(32)
+                        ToolTip.text: qsTr("call_action_show_dialer")
+                        Accessible.name: qsTr("call_action_show_dialer")
+                        onToggled: {
+                            if (checked) {
+                                rightPanel.visible = true
+                                rightPanel.replace(dialerPanel)
                             } else {
                                 rightPanel.visible = false
                             }
