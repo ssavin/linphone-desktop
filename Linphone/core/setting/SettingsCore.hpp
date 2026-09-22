@@ -83,6 +83,7 @@ public:
 
 	// Redial
 	Q_PROPERTY(QString lastDialedNumber READ getLastDialedNumber NOTIFY lastDialedNumberChanged)
+	Q_PROPERTY(QString speedDialsJson READ getSpeedDialsJson NOTIFY speedDialsJsonChanged)
 
 	// Network
 	Q_PROPERTY(bool ipv6Enabled READ getIpv6Enabled WRITE setIpv6Enabled NOTIFY ipv6EnabledChanged)
@@ -286,6 +287,12 @@ public:
 	}
 	void setLastDialedNumberFromModel(QString number);
 
+	// Speed dials. ------------------------------------------------------------------
+	QString getSpeedDialsJson() {
+		return mSpeedDialsJson;
+	}
+	void setSpeedDialsJsonFromModel(QString json);
+
 	// Network. --------------------------------------------------------------------
 
 	bool getIpv6Enabled() {
@@ -401,6 +408,9 @@ signals:
 
 	void lSetLastDialedNumber(QString number);
 	void lastDialedNumberChanged(QString number);
+
+	void lSetSpeedDialsJson(QString json);
+	void speedDialsJsonChanged(QString json);
 
 	void captureDevicesChanged(const QVariantList &devices);
 	void playbackDevicesChanged(const QVariantList &devices);
@@ -537,6 +547,7 @@ private:
 
 	// Redial
 	QString mLastDialedNumber;
+	QString mSpeedDialsJson;
 
 	// Advanced
 	bool mAutoStart;

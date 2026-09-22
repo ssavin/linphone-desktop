@@ -160,6 +160,7 @@ SettingsCore::SettingsCore(QObject *parent) : QObject(parent) {
 	INIT_CORE_MEMBER(DisableCommandLine, settingsModel)
 	INIT_CORE_MEMBER(CallForwardToAddress, settingsModel)
 	INIT_CORE_MEMBER(LastDialedNumber, settingsModel)
+	INIT_CORE_MEMBER(SpeedDialsJson, settingsModel)
 
 	INIT_CORE_MEMBER(ThemeMainColor, settingsModel)
 	INIT_CORE_MEMBER(ThemeAboutPictureUrl, settingsModel)
@@ -204,6 +205,7 @@ SettingsCore::SettingsCore(const SettingsCore &settingsCore) {
 	mPlaybackGain = settingsCore.mPlaybackGain;
 
 	mLastDialedNumber = settingsCore.mLastDialedNumber;
+	mSpeedDialsJson = settingsCore.mSpeedDialsJson;
 
 	mEchoCancellationCalibration = settingsCore.mEchoCancellationCalibration;
 
@@ -539,6 +541,15 @@ void SettingsCore::setSelf(QSharedPointer<SettingsCore> me) {
 		mSettingsModelConnection->invokeToCore([this, number]() { setLastDialedNumberFromModel(number); });
 	});
 
+	// Speed dials
+	mSettingsModelConnection->makeConnectToCore(&SettingsCore::lSetSpeedDialsJson, [this](const QString json) {
+		mSettingsModelConnection->invokeToModel(
+		    [this, json]() { SettingsModel::getInstance()->setSpeedDialsJson(json); });
+	});
+	mSettingsModelConnection->makeConnectToModel(&SettingsModel::speedDialsJsonChanged, [this](const QString json) {
+		mSettingsModelConnection->invokeToCore([this, json]() { setSpeedDialsJsonFromModel(json); });
+	});
+
 	mSettingsModelConnection->makeConnectToModel(&SettingsModel::micVolumeChanged, [this](const float value) {
 		mSettingsModelConnection->invokeToCore([this, value]() { emit micVolumeChanged(value); });
 	});
@@ -764,6 +775,7 @@ void SettingsCore::reset(const SettingsCore &settingsCore) {
 	setPlaybackGain(settingsCore.mPlaybackGain);
 
 	setLastDialedNumberFromModel(settingsCore.mLastDialedNumber);
+	setSpeedDialsJsonFromModel(settingsCore.mSpeedDialsJson);
 
 	// Video
 	setVideoDevice(settingsCore.mVideoDevice);
@@ -1151,6 +1163,13 @@ void SettingsCore::setLastDialedNumberFromModel(QString number) {
 	}
 }
 
+void SettingsCore::setSpeedDialsJsonFromModel(QString json) {
+	if (mSpeedDialsJson != json) {
+		mSpeedDialsJson = json;
+		emit speedDialsJsonChanged(json);
+	}
+}
+
 QVariantMap SettingsCore::getCaptureDevice() const {
 	return mCaptureDevice;
 }
@@ -1223,7 +1242,7 @@ void SettingsCore::setLastActiveTabIndex(int index) {
 }
 
 int SettingsCore::getLastActiveTabIndex() {
-	return mAppSettings.value("lastActiveTabIndex", 1).toInt();
+	return mAppSettings.value("lastActiveTabIndex", 2).toInt();
 }
 
 void SettingsCore::setDisplayDeviceCheckConfirmation(bool display) {

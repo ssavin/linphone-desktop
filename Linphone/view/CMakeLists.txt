@@ -180,6 +180,7 @@ list(APPEND _LINPHONEAPP_QML_FILES
 	view/Page/Main/Account/AccountListView.qml
 	view/Page/Main/Call/CallPage.qml
 	view/Page/Main/Call/CallSettingsPanel.qml
+	view/Page/Main/Call/DialerPage.qml
 	view/Page/Main/Call/WaitingRoom.qml
 	view/Page/Main/Chat/ChatPage.qml
 	view/Page/Main/Contact/ContactPage.qml

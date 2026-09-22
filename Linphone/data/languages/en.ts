@@ -4890,6 +4890,18 @@ Expiration : %1</translation>
         <translation>Calls</translation>
     </message>
     <message>
+        <location filename="../../view/Page/Layout/Main/MainLayout.qml" line="150"/>
+        <source>bottom_navigation_dialer_label</source>
+        <extracomment>&quot;Набор номера&quot;</extracomment>
+        <translation>Dialer</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Layout/Main/MainLayout.qml" line="153"/>
+        <source>open_dialer_page_accessible_name</source>
+        <extracomment>&quot;Open dialer page&quot;</extracomment>
+        <translation>Open dialer page</translation>
+    </message>
+    <message>
         <location filename="../../view/Page/Layout/Main/MainLayout.qml" line="169"/>
         <source>open_calls_page_accessible_name</source>
         <extracomment>&quot;Open calls page&quot;</extracomment>
@@ -5031,6 +5043,73 @@ Expiration : %1</translation>
         <source>drawer_menu_add_account</source>
         <extracomment>&quot;Ajouter un compte&quot;</extracomment>
         <translation>Add an account</translation>
+    </message>
+</context>
+<context>
+    <name>DialerPage</name>
+    <message>
+        <location filename="../../view/Page/Main/Call/DialerPage.qml" line="36"/>
+        <source>dialer_page_title</source>
+        <extracomment>&quot;Набор номера&quot;</extracomment>
+        <translation>Dialer</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Call/DialerPage.qml" line="58"/>
+        <source>dialer_page_placeholder</source>
+        <extracomment>&quot;Numéro à composer&quot;</extracomment>
+        <translation>Enter a number</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Call/DialerPage.qml" line="88"/>
+        <source>menu_add_address_to_contacts</source>
+        <extracomment>&quot;Add to contacts&quot;</extracomment>
+        <translation>Add to contacts</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Call/DialerPage.qml" line="80"/>
+        <source>speed_dial_editor_title</source>
+        <extracomment>&quot;Программируемая кнопка&quot;</extracomment>
+        <translation>Speed dial key</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Call/DialerPage.qml" line="91"/>
+        <source>speed_dial_editor_name_placeholder</source>
+        <extracomment>&quot;Имя&quot;</extracomment>
+        <translation>Name</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Call/DialerPage.qml" line="99"/>
+        <source>speed_dial_editor_number_placeholder</source>
+        <extracomment>&quot;Номер&quot;</extracomment>
+        <translation>Number</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Call/DialerPage.qml" line="113"/>
+        <source>speed_dial_editor_clear</source>
+        <extracomment>&quot;Clear&quot;</extracomment>
+        <translation>Clear</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Call/DialerPage.qml" line="216"/>
+        <source>speed_dial_section_title</source>
+        <extracomment>&quot;Быстрый набор&quot;</extracomment>
+        <translation>Speed dial</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Call/DialerPage.qml" line="226"/>
+        <source>speed_dial_section_hint</source>
+        <extracomment>&quot;Cliquez pour appeler, clic droit pour modifier&quot;</extracomment>
+        <translation>Left click to call. Right click to edit or clear a key.</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Call/DialerPage.qml" line="149"/>
+        <source>cancel</source>
+        <translation>Cancel</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Call/DialerPage.qml" line="154"/>
+        <source>save</source>
+        <translation>Save</translation>
     </message>
 </context>
 <context>

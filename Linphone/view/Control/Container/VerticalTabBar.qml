@@ -110,9 +110,9 @@ Control.TabBar {
 				badgeType: modelData.label
 				unread: !defaultAccount
 				? -1
-				: index === 0 
+				: index === 0
 					? defaultAccount.core?.unreadCallNotifications || -1
-					: index === 2 
+					: index === 3
 						? defaultAccount.core?.unreadMessageNotifications || -1
 						: 0
 				anchors.right: parent.right

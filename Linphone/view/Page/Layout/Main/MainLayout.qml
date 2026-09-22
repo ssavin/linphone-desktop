@@ -38,8 +38,30 @@ Item {
     // default to muting instead, which reads as "KiwiCall breaks other audio"
     // - offer the one-line registry fix once, same pattern as the Android
     // battery-optimization-exemption dialog.
+    // Russian phone numbers only match contacts/CRM cards when the account's
+    // "international prefix" (dial_prefix) is set — otherwise a manually
+    // dialed "89268949839" and a cloud contact's "+79268949839" normalize to
+    // different SIP addresses and findFriend() sees them as unrelated numbers.
+    // New installs and pre-existing ones alike leave this empty (nothing in
+    // our provisioning ever set it), so fix it here once, silently, instead
+    // of requiring every operator to find the field in Account settings.
+    function ensureInternationalPrefix() {
+        var account = accountProxy.defaultAccount;
+        if (!account || !account.core) return;
+        var current = account.core.dialPlan;
+        if (current && (current.text || "").trim().length > 0) return; // already set
+        var plans = account.core.dialPlans;
+        for (var i = 0; i < plans.length; i++) {
+            if ((plans[i].text || "").indexOf("+7") !== -1) {
+                account.core.dialPlan = plans[i];
+                break;
+            }
+        }
+    }
+
     Component.onCompleted: {
         SharedContactsCpp.start()
+        ensureInternationalPrefix()
         if (Qt.platform.os === "windows" && DesktopToolsCpp.shouldOfferAudioDuckingFix()) {
             UtilsCpp.getMainWindow().showConfirmationLambdaPopup("",
                 //: "Другие звуки во время звонков"
@@ -63,23 +85,23 @@ Item {
         mainItem.openCallHistory();
     }
     function displayContactPage(contactAddress) {
-        tabbar.currentIndex = 1;
+        tabbar.currentIndex = 2;
         mainItem.displayContactRequested(contactAddress);
     }
     function displayChatPage(contactAddress) {
-        tabbar.currentIndex = 2;
+        tabbar.currentIndex = 3;
         mainItem.displayChatRequested(contactAddress);
     }
     function openChat(chat) {
-        tabbar.currentIndex = 2;
+        tabbar.currentIndex = 3;
         mainItem.openChatRequested(chat);
     }
     function createContact(name, address) {
-        tabbar.currentIndex = 1;
+        tabbar.currentIndex = 2;
         mainItem.createContactRequested(name, address);
     }
     function scheduleMeeting(subject, addresses) {
-        tabbar.currentIndex = 3;
+        tabbar.currentIndex = 4;
         mainItem.scheduleMeetingRequested(subject, addresses);
     }
 
@@ -192,6 +214,14 @@ Item {
                         "label": qsTr("bottom_navigation_calls_label"),
                         //: "Open calls page"
                         "accessibilityLabel": qsTr("open_calls_page_accessible_name")
+                    },
+                    {
+                        "icon": AppIcons.dialer,
+                        "selectedIcon": AppIcons.dialer,
+                        //: "Набор номера"
+                        "label": qsTr("bottom_navigation_dialer_label"),
+                        //: "Open dialer page"
+                        "accessibilityLabel": qsTr("open_dialer_page_accessible_name")
                     },
                     {
                         "icon": AppIcons.adressBook,
@@ -796,6 +826,19 @@ Item {
                         }
                         Loader {
                             active: mainStackLayout.currentIndex === 1
+                            sourceComponent: DialerPage {
+                                id: dialerPage
+                                onCreateContactRequested: (name, address) => {
+                                    mainItem.createContact(name, address);
+                                }
+                            }
+                            onLoaded: {
+                                if(focusPageOnNextLoad) item.forceActiveFocus(Qt.TabFocusReason)
+                                focusPageOnNextLoad = false
+                            }
+                        }
+                        Loader {
+                            active: mainStackLayout.currentIndex === 2
                             sourceComponent: ContactPage {
                                 id: contactPage
                                 Connections {
@@ -814,7 +857,7 @@ Item {
                             }
                         }
                         Loader {
-                            active: mainStackLayout.currentIndex === 2
+                            active: mainStackLayout.currentIndex === 3
                             sourceComponent: ChatPage {
                                 id: chatPage
                                 Connections {
@@ -841,7 +884,7 @@ Item {
                         }
 
                         Loader {
-                            active: mainStackLayout.currentIndex === 3
+                            active: mainStackLayout.currentIndex === 4
                             sourceComponent: Component {
                                 id: meetingComp
                                 MeetingPage {

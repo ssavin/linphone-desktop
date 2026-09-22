@@ -4340,6 +4340,18 @@ Error</extracomment>
         <translation>Звонки</translation>
     </message>
     <message>
+        <location filename="../../view/Page/Layout/Main/MainLayout.qml" line="150"/>
+        <source>bottom_navigation_dialer_label</source>
+        <extracomment>&quot;Набор номера&quot;</extracomment>
+        <translation>Набор</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Layout/Main/MainLayout.qml" line="153"/>
+        <source>open_dialer_page_accessible_name</source>
+        <extracomment>&quot;Open dialer page&quot;</extracomment>
+        <translation>Открыть страницу набора номера</translation>
+    </message>
+    <message>
         <location filename="../../view/Page/Layout/Main/MainLayout.qml" line="144"/>
         <source>open_calls_page_accessible_name</source>
         <extracomment>&quot;Open calls page&quot;</extracomment>
@@ -4498,7 +4510,80 @@ Error</extracomment>
     </message>
 </context>
 <context>
+    <name>DialerPage</name>
+    <message>
+        <location filename="../../view/Page/Main/Call/DialerPage.qml" line="36"/>
+        <source>dialer_page_title</source>
+        <extracomment>&quot;Набор номера&quot;</extracomment>
+        <translation>Набор номера</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Call/DialerPage.qml" line="58"/>
+        <source>dialer_page_placeholder</source>
+        <extracomment>&quot;Numéro à composer&quot;</extracomment>
+        <translation>Введите номер</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Call/DialerPage.qml" line="88"/>
+        <source>menu_add_address_to_contacts</source>
+        <extracomment>&quot;Add to contacts&quot;</extracomment>
+        <translation>Добавить в контакты</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Call/DialerPage.qml" line="80"/>
+        <source>speed_dial_editor_title</source>
+        <extracomment>&quot;Программируемая кнопка&quot;</extracomment>
+        <translation>Программируемая кнопка</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Call/DialerPage.qml" line="91"/>
+        <source>speed_dial_editor_name_placeholder</source>
+        <extracomment>&quot;Имя&quot;</extracomment>
+        <translation>Имя</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Call/DialerPage.qml" line="99"/>
+        <source>speed_dial_editor_number_placeholder</source>
+        <extracomment>&quot;Номер&quot;</extracomment>
+        <translation>Номер</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Call/DialerPage.qml" line="113"/>
+        <source>speed_dial_editor_clear</source>
+        <extracomment>&quot;Clear&quot;</extracomment>
+        <translation>Очистить</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Call/DialerPage.qml" line="216"/>
+        <source>speed_dial_section_title</source>
+        <extracomment>&quot;Быстрый набор&quot;</extracomment>
+        <translation>Быстрый набор</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Call/DialerPage.qml" line="226"/>
+        <source>speed_dial_section_hint</source>
+        <extracomment>&quot;Cliquez pour appeler, clic droit pour modifier&quot;</extracomment>
+        <translation>Левый клик — позвонить. Правый клик — изменить или удалить номер.</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Call/DialerPage.qml" line="149"/>
+        <source>cancel</source>
+        <translation>Отмена</translation>
+    </message>
+    <message>
+        <location filename="../../view/Page/Main/Call/DialerPage.qml" line="154"/>
+        <source>save</source>
+        <translation>Сохранить</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
+    <message>
+        <location filename="../../view/Page/Window/Main/MainWindow.qml" line="242"/>
+        <source>oidc_connection_waiting_message</source>
+        <extracomment>&quot;Trying to connect to single sign on on web page ...&quot;</extracomment>
+        <translation>Идет подключение к системе…</translation>
+    </message>
     <message>
         <location filename="../../view/Page/Window/Main/MainWindow.qml" line="41"/>
         <source>information_popup_connexion_succeed_title</source>

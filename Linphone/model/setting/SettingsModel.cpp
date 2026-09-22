@@ -941,6 +941,19 @@ void SettingsModel::setLastDialedNumber(const QString &data) {
 	emit(lastDialedNumberChanged(data));
 }
 
+// Speed-dial keys (office-phone style programmable buttons on the Dialer
+// page): stored as a single JSON blob, array-managed on the QML side, so no
+// per-slot config plumbing is needed here.
+QString SettingsModel::getSpeedDialsJson() const {
+	mustBeInLinphoneThread(log().arg(Q_FUNC_INFO));
+	return Utils::coreStringToAppString(mConfig->getString(UiSection, "speed_dials_json", "[]"));
+}
+
+void SettingsModel::setSpeedDialsJson(const QString &data) {
+	mConfig->setString(UiSection, "speed_dials_json", Utils::appStringToCoreString(data));
+	emit(speedDialsJsonChanged(data));
+}
+
 bool SettingsModel::isSystrayNotificationBlinkEnabled() const {
 	return !!mConfig->getInt(UiSection, "systray_notification_blink", 1);
 }
