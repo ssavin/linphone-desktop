@@ -7,6 +7,7 @@ import QtQuick.Layouts
 import Linphone
 import UtilsCpp
 import SettingsCpp
+import SharedContactsCpp
 import 'qrc:/qt/qml/Linphone/view/Control/Tool/Helper/utils.js' as Utils
 import 'qrc:/qt/qml/Linphone/view/Style/buttonStyle.js' as ButtonStyle
 
@@ -100,6 +101,34 @@ MainRightPanel {
 					return
 				}
 				mainItem.contact.core.save()
+
+				// A brand-new/edited local contact never reaches the CRM by
+				// itself (only a one-way server->desktop import exists) — an
+				// operator adding a number after a call, or fixing one that
+				// changed, expects it to show up for the whole clinic, not
+				// just on their own machine. Cloud-shared contacts are
+				// excluded: they're already there, and re-suggesting a phone
+				// nobody edited would just be moderation-queue noise.
+				if (!mainItem.contact.core.isKiwiShared) {
+					var suggestedPhones = []
+					var allAddr = mainItem.contact.core.allAddresses
+					for (var i = 0; i < allAddr.length; i++) {
+						var addr = allAddr[i].address || ""
+						var uriMatch = /^sip:([^@;]+)@/.exec(addr)
+						var candidate = uriMatch ? uriMatch[1] : addr
+						if (/^\+?\d[\d\s()-]*$/.test(candidate) && candidate.replace(/\D/g, "").length >= 5)
+							suggestedPhones.push(candidate)
+					}
+					if (suggestedPhones.length > 0) {
+						// contact.core.fullName only refreshes after save()'s
+						// async round trip to the model comes back — reading
+						// it right here is always one tick too early (empty
+						// on a brand-new contact). Compose it from the two
+						// fields the UI itself just wrote synchronously.
+						var suggestedName = (mainItem.contact.core.givenName + " " + mainItem.contact.core.familyName).trim()
+						SharedContactsCpp.suggestContact(suggestedName, suggestedPhones)
+					}
+				}
 			}
 		}
 		button.onClicked: {
