@@ -285,8 +285,17 @@ void SharedContactsCore::apply(const QString &version, const QList<SharedContact
 				auto contact = core->createFriend();
 				contact->setName(entry.name.toStdString());
 				contact->setRefKey(entry.refKey.toStdString());
-				for (const auto &phone : entry.phones)
+				for (const auto &phone : entry.phones) {
 					contact->addPhoneNumber(phone.toStdString());
+					// A phone-number-only vCard (TEL with no IMPP) has no
+					// linphone::Address attached, and Core::findFriend()
+					// - used to name the caller during calls/history -
+					// only reliably matches friends that have one. Give it
+					// the same SIP address a real call to this number
+					// would resolve to.
+					auto address = ToolModel::interpretUrl(phone);
+					if (address) contact->addAddress(address);
+				}
 				if (friendList->addFriend(contact) == linphone::FriendList::Status::OK) ++added;
 				continue;
 			}
@@ -294,14 +303,19 @@ void SharedContactsCore::apply(const QString &version, const QList<SharedContact
 			for (const auto &number : existing->getPhoneNumbers())
 				currentPhones << Utils::coreStringToAppString(number);
 			if (Utils::coreStringToAppString(existing->getName()) == entry.name &&
-			    digitSet(currentPhones) == digitSet(entry.phones))
+			    digitSet(currentPhones) == digitSet(entry.phones) && !existing->getAddresses().empty())
 				continue;
 			existing->edit();
 			existing->setName(entry.name.toStdString());
 			for (const auto &number : existing->getPhoneNumbers())
 				existing->removePhoneNumber(number);
-			for (const auto &phone : entry.phones)
+			for (const auto &address : existing->getAddresses())
+				existing->removeAddress(address);
+			for (const auto &phone : entry.phones) {
 				existing->addPhoneNumber(phone.toStdString());
+				auto address = ToolModel::interpretUrl(phone);
+				if (address) existing->addAddress(address);
+			}
 			existing->done();
 			++updated;
 		}
