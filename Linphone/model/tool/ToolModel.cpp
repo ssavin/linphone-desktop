@@ -29,7 +29,9 @@
 #include <QDebug>
 #include <QDirIterator>
 #include <QLibrary>
+#include <QRegularExpression>
 #include <QTest>
+#include <QUrl>
 
 DEFINE_ABSTRACT_OBJECT(ToolModel)
 
@@ -37,8 +39,25 @@ ToolModel::ToolModel(QObject *parent) {
 }
 ToolModel::~ToolModel() {
 }
-std::shared_ptr<linphone::Address> ToolModel::interpretUrl(const QString &address) {
-	if (address.isEmpty()) return nullptr;
+// A phone number pasted from a document or spreadsheet carries spaces, tabs,
+// dashes, parentheses or an em dash ("+7 999 834-92-92<TAB>—"). Left as is it
+// becomes a garbage SIP user part: the trunk rejects the call (403 "Forbidden
+// resource") and the call log keeps an address no contact can ever match.
+static QString stripPhoneFormatting(const QString &text) {
+	QString trimmed = text.trimmed();
+	if (trimmed.isEmpty() || trimmed.contains('@') || trimmed.startsWith("sip", Qt::CaseInsensitive)) return text;
+	static const QRegularExpression phoneLike(QStringLiteral("^\\+?[\\d\\s\\-\\x{2013}\\x{2014}().]+$"));
+	if (!phoneLike.match(trimmed).hasMatch()) return text;
+	QString digits;
+	for (const QChar &c : trimmed)
+		if (c.isDigit()) digits.append(c);
+	if (digits.size() < 5) return text;
+	return trimmed.startsWith('+') ? "+" + digits : digits;
+}
+
+std::shared_ptr<linphone::Address> ToolModel::interpretUrl(const QString &rawAddress) {
+	if (rawAddress.isEmpty()) return nullptr;
+	const QString address = stripPhoneFormatting(rawAddress);
 	bool usePrefix = false; // TODO
 	auto interpretedAddress =
 	    CoreModel::getInstance()->getCore()->interpretUrl(Utils::appStringToCoreString(address), usePrefix);
@@ -279,7 +298,28 @@ ToolModel::findFriendByAddress(const std::shared_ptr<const linphone::Address> &l
 		// qDebug() << key << "have been found in unknown friend, return it";
 		return friendsManager->getUnknownFriendAtKey(key);
 	}
-	auto f = CoreModel::getInstance()->getCore()->findFriend(linphoneAddr);
+	auto core = CoreModel::getInstance()->getCore();
+	auto f = core->findFriend(linphoneAddr);
+	if (!f) {
+		// The same phone number reaches us as "79096307892", "+79096307892" or
+		// "89096307892" depending on who delivered the call, while a contact's
+		// address uses one fixed form and findFriend() compares the user part
+		// literally. Retry with the other spellings of the same number.
+		QString user = QUrl::fromPercentEncoding(QByteArray::fromStdString(linphoneAddr->getUsername()));
+		static const QRegularExpression digitsOnly(QStringLiteral("^\\+?\\d{10,15}$"));
+		if (digitsOnly.match(user).hasMatch()) {
+			QString digits = user.startsWith('+') ? user.mid(1) : user;
+			QStringList variants{"+" + digits, digits};
+			if (digits.size() == 11 && digits.startsWith('8')) variants << "+7" + digits.mid(1) << "7" + digits.mid(1);
+			for (const QString &variant : variants) {
+				if (variant == user) continue;
+				auto alt = linphoneAddr->clone();
+				alt->setUsername(Utils::appStringToCoreString(variant));
+				f = core->findFriend(alt);
+				if (f) break;
+			}
+		}
+	}
 	if (f) {
 		if (friendsManager->isInUnknownFriends(key)) {
 			friendsManager->removeUnknownFriend(key);
