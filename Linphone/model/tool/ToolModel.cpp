@@ -302,20 +302,33 @@ ToolModel::findFriendByAddress(const std::shared_ptr<const linphone::Address> &l
 	auto f = core->findFriend(linphoneAddr);
 	if (!f) {
 		// The same phone number reaches us as "79096307892", "+79096307892" or
-		// "89096307892" depending on who delivered the call, while a contact's
-		// address uses one fixed form and findFriend() compares the user part
-		// literally. Retry with the other spellings of the same number.
-		QString user = QUrl::fromPercentEncoding(QByteArray::fromStdString(linphoneAddr->getUsername()));
-		static const QRegularExpression digitsOnly(QStringLiteral("^\\+?\\d{10,15}$"));
-		if (digitsOnly.match(user).hasMatch()) {
-			QString digits = user.startsWith('+') ? user.mid(1) : user;
-			QStringList variants{"+" + digits, digits};
-			if (digits.size() == 11 && digits.startsWith('8')) variants << "+7" + digits.mid(1) << "7" + digits.mid(1);
-			for (const QString &variant : variants) {
-				if (variant == user) continue;
-				auto alt = linphoneAddr->clone();
-				alt->setUsername(Utils::appStringToCoreString(variant));
-				f = core->findFriend(alt);
+		// "89096307892" depending on who delivered the call, while a contact keeps
+		// one fixed spelling and findFriend() compares the SIP user part
+		// literally. Fall back to comparing the last 10 digits of the number
+		// with every contact's phone numbers and addresses.
+		auto tail10 = [](const QString &text) {
+			QString digits;
+			for (const QChar &c : text)
+				if (c.isDigit()) digits.append(c);
+			return digits.size() >= 10 ? digits.right(10) : QString();
+		};
+		QString wanted = tail10(QUrl::fromPercentEncoding(QByteArray::fromStdString(linphoneAddr->getUsername())));
+		if (!wanted.isEmpty()) {
+			for (const auto &list : core->getFriendsLists()) {
+				for (const auto &candidate : list->getFriends()) {
+					bool match = false;
+					for (const auto &number : candidate->getPhoneNumbers())
+						if (tail10(Utils::coreStringToAppString(number)) == wanted) match = true;
+					if (!match)
+						for (const auto &addr : candidate->getAddresses())
+							if (tail10(QUrl::fromPercentEncoding(QByteArray::fromStdString(addr->getUsername()))) ==
+							    wanted)
+								match = true;
+					if (match) {
+						f = candidate;
+						break;
+					}
+				}
 				if (f) break;
 			}
 		}
