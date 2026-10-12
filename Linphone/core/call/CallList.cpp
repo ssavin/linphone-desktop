@@ -23,6 +23,7 @@
 #include "CallGui.hpp"
 #include "core/App.hpp"
 #include "model/tool/ToolModel.hpp"
+#include "tool/AudioDucker.hpp"
 #include <QSharedPointer>
 #include <linphone++/linphone.hh>
 
@@ -46,6 +47,7 @@ QSharedPointer<CallCore> CallList::createCallCore(const std::shared_ptr<linphone
 CallList::CallList(QObject *parent) : ListProxy(parent) {
 	mustBeInMainThread(getClassName());
 	App::getInstance()->mEngine->setObjectOwnership(this, QQmlEngine::CppOwnership);
+	AudioDucker::instance()->restoreLeftovers(); // A crash during a call may have left other apps muted.
 }
 
 CallList::~CallList() {
@@ -237,6 +239,7 @@ void CallList::onStateChanged() {
 		case LinphoneEnums::CallState::Resuming: {
 			auto sharedCall = get(call);
 			setCurrentCallCore(sharedCall ? sharedCall.objectCast<CallCore>() : nullptr);
+			AudioDucker::instance()->engage(); // Mute other apps' playback during the conversation.
 			break;
 		}
 		case LinphoneEnums::CallState::Released: {
@@ -255,6 +258,7 @@ void CallList::onStateChanged() {
 					setCurrentCallCore(nextCall);
 				}
 				bool removed = remove(sharedCall);
+				if (getSharedList<CallCore>().isEmpty()) AudioDucker::instance()->release();
 			}
 			break;
 		}
