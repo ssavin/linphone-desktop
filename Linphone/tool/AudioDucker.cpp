@@ -7,6 +7,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
+#include <QRegularExpression>
 #include <QStandardPaths>
 #include <QTextStream>
 
@@ -20,7 +21,16 @@
 using Microsoft::WRL::ComPtr;
 
 namespace {
-// Calls fn(volume, sessionId, isExpired) for every playback session of the other processes.
+// A session instance id looks like "<device>|<app>%b{guid}|<n>%b<pid>"; the app part identifies the program.
+// Windows remembers the mute state per program, so that is what has to be tracked (and restored).
+QString appIdOf(const QString &instanceId) {
+	static const QRegularExpression instanceSuffix(QStringLiteral("\\|\\d+%b(\\d+|#)$"));
+	QString id = instanceId;
+	id.remove(instanceSuffix);
+	return id;
+}
+
+// Calls fn(volume, appId, isExpired) for every playback session of the other processes.
 template <typename Fn>
 void forEachForeignSession(Fn fn) {
 	HRESULT init = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
@@ -57,7 +67,9 @@ void forEachForeignSession(Fn fn) {
 					if (FAILED(control2->GetSessionInstanceIdentifier(&rawId)) || !rawId) continue;
 					QString id = QString::fromWCharArray(rawId);
 					CoTaskMemFree(rawId);
-					fn(volume.Get(), id, state == AudioSessionStateExpired);
+					if (id.contains(QStringLiteral("audiodg.exe"), Qt::CaseInsensitive))
+						continue; // Not an application.
+					fn(volume.Get(), appIdOf(id), state == AudioSessionStateExpired);
 				}
 			}
 		}
@@ -90,12 +102,17 @@ void AudioDucker::engage() {
 void AudioDucker::scan() {
 #ifdef Q_OS_WIN
 	bool changed = false;
-	forEachForeignSession([&](ISimpleAudioVolume *volume, const QString &id, bool expired) {
-		if (expired || mMuted.contains(id)) return;
+	forEachForeignSession([&](ISimpleAudioVolume *volume, const QString &appId, bool expired) {
+		if (expired) return;
 		BOOL muted = FALSE;
-		if (FAILED(volume->GetMute(&muted)) || muted) return; // Already muted by the user: leave it alone.
+		if (FAILED(volume->GetMute(&muted))) return;
+		if (mMuted.contains(appId)) { // Our program: a new session of it may have inherited or lost the mute.
+			if (!muted) volume->SetMute(TRUE, nullptr);
+			return;
+		}
+		if (muted) return; // Already muted by the user: leave it alone.
 		if (SUCCEEDED(volume->SetMute(TRUE, nullptr))) {
-			mMuted.insert(id);
+			mMuted.insert(appId);
 			changed = true;
 		}
 	});
@@ -108,11 +125,19 @@ void AudioDucker::release() {
 	mTimer.stop();
 	mEngaged = false;
 	if (mMuted.isEmpty()) return;
-	forEachForeignSession([&](ISimpleAudioVolume *volume, const QString &id, bool) {
-		if (mMuted.contains(id)) volume->SetMute(FALSE, nullptr);
-	});
+	const QSet<QString> apps = mMuted;
+	auto unmute = [apps]() {
+		forEachForeignSession([&](ISimpleAudioVolume *volume, const QString &appId, bool) {
+			if (apps.contains(appId)) volume->SetMute(FALSE, nullptr);
+		});
+	};
+	unmute();
 	mMuted.clear();
 	saveState();
+	// A program may open a new session right after the call and get the remembered mute applied to it.
+	QTimer::singleShot(3000, this, [this, unmute]() {
+		if (!mEngaged) unmute();
+	});
 #endif
 }
 
@@ -125,7 +150,7 @@ void AudioDucker::restoreLeftovers() {
 		QTextStream in(&file);
 		while (!in.atEnd()) {
 			QString line = in.readLine().trimmed();
-			if (!line.isEmpty()) mMuted.insert(line);
+			if (!line.isEmpty()) mMuted.insert(appIdOf(line)); // Older files hold instance ids.
 		}
 		file.close();
 	}
