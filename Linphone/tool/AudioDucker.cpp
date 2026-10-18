@@ -5,6 +5,7 @@
 #include "AudioDucker.hpp"
 
 #include <QCoreApplication>
+#include <QDebug>
 #include <QDir>
 #include <QFile>
 #include <QRegularExpression>
@@ -114,6 +115,7 @@ void AudioDucker::scan() {
 		if (SUCCEEDED(volume->SetMute(TRUE, nullptr))) {
 			mMuted.insert(appId);
 			changed = true;
+			qInfo() << "[AudioDucker] muted" << appId;
 		}
 	});
 	if (changed) saveState();
@@ -128,7 +130,10 @@ void AudioDucker::release() {
 	const QSet<QString> apps = mMuted;
 	auto unmute = [apps]() {
 		forEachForeignSession([&](ISimpleAudioVolume *volume, const QString &appId, bool) {
-			if (apps.contains(appId)) volume->SetMute(FALSE, nullptr);
+			if (apps.contains(appId)) {
+				volume->SetMute(FALSE, nullptr);
+				qInfo() << "[AudioDucker] unmuted" << appId;
+			}
 		});
 	};
 	unmute();
