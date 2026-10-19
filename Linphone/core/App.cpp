@@ -18,6 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "tool/AudioDucker.hpp"
 #include "tool/LinphoneEnums.hpp"
 
 #include "App.hpp"
@@ -852,6 +853,11 @@ void App::initCore() {
 			    QObject::connect(mSettings.get(), &SettingsCore::autoStartChanged, [this]() {
 				    mustBeInMainThread(log().arg(Q_FUNC_INFO));
 				    setAutoStart(mSettings->getAutoStart());
+			    });
+			    QObject::connect(mSettings.get(), &SettingsCore::muteOtherAppsDuringCallChanged, [this]() {
+				    mustBeInMainThread(log().arg(Q_FUNC_INFO));
+				    // Turned off during a call: give the sound back at once.
+				    if (mSettings && !mSettings->getMuteOtherAppsDuringCall()) AudioDucker::instance()->release();
 			    });
 			    QObject::connect(mSettings.get(), &SettingsCore::configLocaleChanged, [this]() {
 				    mustBeInMainThread(log().arg(Q_FUNC_INFO));

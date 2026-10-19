@@ -1120,6 +1120,7 @@ void SettingsModel::notifyConfigReady(){
 	DEFINE_NOTIFY_CONFIG_READY(assistantThirdPartySipAccountTransport, AssistantThirdPartySipAccountTransport)
 	DEFINE_NOTIFY_CONFIG_READY(autoStart, AutoStart)
 	DEFINE_NOTIFY_CONFIG_READY(exitOnClose, ExitOnClose)
+	DEFINE_NOTIFY_CONFIG_READY(muteOtherAppsDuringCall, MuteOtherAppsDuringCall)
 	DEFINE_NOTIFY_CONFIG_READY(syncLdapContacts, SyncLdapContacts)
 	DEFINE_NOTIFY_CONFIG_READY(configLocale, ConfigLocale)
 	DEFINE_NOTIFY_CONFIG_READY(downloadFolder, DownloadFolder)
@@ -1222,6 +1223,13 @@ DEFINE_GETSET_CONFIG(SettingsModel,
 							ExitOnClose,
 							"exit_on_close",
 							false)
+DEFINE_GETSET_CONFIG(SettingsModel,
+						bool,
+						Bool,
+						muteOtherAppsDuringCall,
+						MuteOtherAppsDuringCall,
+						"mute_other_apps_during_call",
+						true)
 DEFINE_GETSET_CONFIG(SettingsModel,
 						bool,
 						Bool,

@@ -67,6 +67,13 @@ AbstractSettingsLayout {
             }
             SwitchSetting {
                 Layout.fillWidth: true
+                titleText: qsTr("Заглушать другие программы во время звонка")
+                subTitleText: qsTr("Звук браузера, плееров и системные сигналы выключаются на время разговора и возвращаются после него")
+                propertyName: "muteOtherAppsDuringCall"
+                propertyOwner: SettingsCpp
+            }
+            SwitchSetting {
+                Layout.fillWidth: true
                 //: "Activer l’enregistrement automatique des appels"
                 titleText: qsTr("settings_calls_auto_record_title")
                 propertyName: "automaticallyRecordCallsEnabled"

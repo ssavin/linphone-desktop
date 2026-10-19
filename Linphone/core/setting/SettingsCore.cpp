@@ -149,6 +149,7 @@ SettingsCore::SettingsCore(QObject *parent) : QObject(parent) {
 	INIT_CORE_MEMBER(AssistantThirdPartySipAccountTransport, settingsModel)
 	INIT_CORE_MEMBER(AutoStart, settingsModel)
 	INIT_CORE_MEMBER(ExitOnClose, settingsModel)
+	INIT_CORE_MEMBER(MuteOtherAppsDuringCall, settingsModel)
 	INIT_CORE_MEMBER(SyncLdapContacts, settingsModel)
 	INIT_CORE_MEMBER(ConfigLocale, settingsModel)
 	INIT_CORE_MEMBER(DownloadFolder, settingsModel)
@@ -241,6 +242,7 @@ SettingsCore::SettingsCore(const SettingsCore &settingsCore) {
 	mAssistantThirdPartySipAccountDomain = settingsCore.mAssistantThirdPartySipAccountDomain;
 	mAssistantThirdPartySipAccountTransport = settingsCore.mAssistantThirdPartySipAccountTransport;
 	mExitOnClose = settingsCore.mExitOnClose;
+	mMuteOtherAppsDuringCall = settingsCore.mMuteOtherAppsDuringCall;
 	mSyncLdapContacts = settingsCore.mSyncLdapContacts;
 	mIpv6Enabled = settingsCore.mIpv6Enabled;
 	mAutoStart = settingsCore.mAutoStart;
@@ -367,6 +369,7 @@ void SettingsCore::reloadSettings() {
 	setAssistantThirdPartySipAccountTransport(settingsModel->getAssistantThirdPartySipAccountTransport());
 	setAutoStart(settingsModel->getAutoStart());
 	setExitOnClose(settingsModel->getExitOnClose());
+	setMuteOtherAppsDuringCall(settingsModel->getMuteOtherAppsDuringCall());
 	setSyncLdapContacts(settingsModel->getSyncLdapContacts());
 	setConfigLocale(settingsModel->getConfigLocale());
 	setDownloadFolder(settingsModel->getDownloadFolder());
@@ -695,6 +698,8 @@ void SettingsCore::setSelf(QSharedPointer<SettingsCore> me) {
 	DEFINE_CORE_GETSET_CONNECT(mSettingsModelConnection, SettingsCore, SettingsModel, settingsModel, bool, exitOnClose,
 	                           ExitOnClose)
 	DEFINE_CORE_GETSET_CONNECT(mSettingsModelConnection, SettingsCore, SettingsModel, settingsModel, bool,
+	                           muteOtherAppsDuringCall, MuteOtherAppsDuringCall)
+	DEFINE_CORE_GETSET_CONNECT(mSettingsModelConnection, SettingsCore, SettingsModel, settingsModel, bool,
 	                           syncLdapContacts, SyncLdapContacts)
 	DEFINE_CORE_GETSET_CONNECT(mSettingsModelConnection, SettingsCore, SettingsModel, settingsModel, QString,
 	                           configLocale, ConfigLocale)
@@ -812,6 +817,7 @@ void SettingsCore::reset(const SettingsCore &settingsCore) {
 	setAssistantThirdPartySipAccountDomain(settingsCore.mAssistantThirdPartySipAccountDomain);
 	setAssistantThirdPartySipAccountTransport(settingsCore.mAssistantThirdPartySipAccountTransport);
 	setExitOnClose(settingsCore.mExitOnClose);
+	setMuteOtherAppsDuringCall(settingsCore.mMuteOtherAppsDuringCall);
 	setSyncLdapContacts(settingsCore.mSyncLdapContacts);
 	setCardDAVMinCharForResearch(settingsCore.mCardDAVMinCharForResearch);
 	setIpv6Enabled(settingsCore.mIpv6Enabled);
@@ -1406,6 +1412,10 @@ bool SettingsCore::getExitOnClose() const {
 	return mExitOnClose;
 }
 
+bool SettingsCore::getMuteOtherAppsDuringCall() const {
+	return mMuteOtherAppsDuringCall;
+}
+
 bool SettingsCore::getSyncLdapContacts() const {
 	return mSyncLdapContacts;
 }
@@ -1508,6 +1518,7 @@ void SettingsCore::writeIntoModel(std::shared_ptr<SettingsModel> model) const {
 	model->setAssistantThirdPartySipAccountDomain(mAssistantThirdPartySipAccountDomain);
 	model->setAssistantThirdPartySipAccountTransport(mAssistantThirdPartySipAccountTransport);
 	model->setExitOnClose(mExitOnClose);
+	model->setMuteOtherAppsDuringCall(mMuteOtherAppsDuringCall);
 	model->setSyncLdapContacts(mSyncLdapContacts);
 	model->setIpv6Enabled(mIpv6Enabled);
 	model->setAutoStart(mAutoStart);
@@ -1601,6 +1612,7 @@ void SettingsCore::writeFromModel(const std::shared_ptr<SettingsModel> &model) {
 	mAssistantThirdPartySipAccountTransport = model->getAssistantThirdPartySipAccountTransport();
 	mAutoStart = model->getAutoStart();
 	mExitOnClose = model->getExitOnClose();
+	mMuteOtherAppsDuringCall = model->getMuteOtherAppsDuringCall();
 	mSyncLdapContacts = model->getSyncLdapContacts();
 	mCardDAVMinCharForResearch = model->getCardDAVMinCharResearch();
 	mIpv6Enabled = model->getIpv6Enabled();

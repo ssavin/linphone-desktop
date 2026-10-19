@@ -239,7 +239,9 @@ void CallList::onStateChanged() {
 		case LinphoneEnums::CallState::Resuming: {
 			auto sharedCall = get(call);
 			setCurrentCallCore(sharedCall ? sharedCall.objectCast<CallCore>() : nullptr);
-			AudioDucker::instance()->engage(); // Mute other apps' playback during the conversation.
+			auto settings = App::getInstance()->getSettings();
+			if (!settings || settings->getMuteOtherAppsDuringCall())
+				AudioDucker::instance()->engage(); // Mute other apps' playback during the conversation.
 			break;
 		}
 		case LinphoneEnums::CallState::Released: {
