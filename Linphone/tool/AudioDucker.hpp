@@ -20,18 +20,21 @@ public:
 
 	// Mute all other playback sessions (idempotent). New sessions started during the call are caught by a timer.
 	void engage();
-	// Restore everything that this class muted.
+	// Restore everything that this class muted (also keeps watching programs whose session was gone at that moment).
 	void release();
-	// Un-mute sessions left muted by a previous run that crashed during a call.
+	// Un-mute programs left muted by a previous run (crash, or a session that did not exist when the call ended).
 	void restoreLeftovers();
 
 private:
 	AudioDucker(QObject *parent = nullptr);
 	void scan();
+	void scanPending();
 	void saveState() const;
 
-	QSet<QString> mMuted;
+	QSet<QString> mMuted;   // Programs muted by the current call.
+	QSet<QString> mPending; // Programs to un-mute as soon as a muted session of theirs shows up.
 	QTimer mTimer;
+	QTimer mPendingTimer;
 	bool mEngaged = false;
 };
 

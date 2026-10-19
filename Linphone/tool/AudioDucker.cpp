@@ -88,6 +88,8 @@ AudioDucker *AudioDucker::instance() {
 AudioDucker::AudioDucker(QObject *parent) : QObject(parent) {
 	mTimer.setInterval(2000);
 	connect(&mTimer, &QTimer::timeout, this, &AudioDucker::scan);
+	mPendingTimer.setInterval(3000);
+	connect(&mPendingTimer, &QTimer::timeout, this, &AudioDucker::scanPending);
 	connect(qApp, &QCoreApplication::aboutToQuit, this, &AudioDucker::release);
 }
 
@@ -95,6 +97,7 @@ void AudioDucker::engage() {
 #ifdef Q_OS_WIN
 	if (mEngaged) return;
 	mEngaged = true;
+	mPendingTimer.stop();
 	scan();
 	mTimer.start();
 #endif
@@ -126,23 +129,34 @@ void AudioDucker::release() {
 #ifdef Q_OS_WIN
 	mTimer.stop();
 	mEngaged = false;
-	if (mMuted.isEmpty()) return;
-	const QSet<QString> apps = mMuted;
-	auto unmute = [apps]() {
-		forEachForeignSession([&](ISimpleAudioVolume *volume, const QString &appId, bool) {
-			if (apps.contains(appId)) {
-				volume->SetMute(FALSE, nullptr);
-				qInfo() << "[AudioDucker] unmuted" << appId;
-			}
-		});
-	};
-	unmute();
+	if (mMuted.isEmpty() && mPending.isEmpty()) return;
+	// Windows remembers the mute of a program and applies it to the sessions it opens later (a browser that was idle
+	// when the call ended, for instance). Keep watching these programs until they are seen un-muted.
+	mPending.unite(mMuted);
 	mMuted.clear();
 	saveState();
-	// A program may open a new session right after the call and get the remembered mute applied to it.
-	QTimer::singleShot(3000, this, [this, unmute]() {
-		if (!mEngaged) unmute();
+	scanPending();
+	if (!mPending.isEmpty()) mPendingTimer.start();
+#endif
+}
+
+void AudioDucker::scanPending() {
+#ifdef Q_OS_WIN
+	if (mEngaged) return;
+	QSet<QString> done;
+	forEachForeignSession([&](ISimpleAudioVolume *volume, const QString &appId, bool expired) {
+		if (expired || !mPending.contains(appId)) return;
+		BOOL muted = FALSE;
+		if (FAILED(volume->GetMute(&muted))) return;
+		if (muted) {
+			volume->SetMute(FALSE, nullptr);
+			qInfo() << "[AudioDucker] unmuted" << appId;
+		} else done.insert(appId); // Seen sound-enabled after the call: nothing left to restore for it.
 	});
+	if (done.isEmpty()) return;
+	mPending.subtract(done);
+	if (mPending.isEmpty()) mPendingTimer.stop();
+	saveState();
 #endif
 }
 
@@ -155,17 +169,18 @@ void AudioDucker::restoreLeftovers() {
 		QTextStream in(&file);
 		while (!in.atEnd()) {
 			QString line = in.readLine().trimmed();
-			if (!line.isEmpty()) mMuted.insert(appIdOf(line)); // Older files hold instance ids.
+			if (!line.isEmpty()) mPending.insert(appIdOf(line)); // Older files hold instance ids.
 		}
 		file.close();
 	}
-	release();
+	scanPending();
+	if (!mPending.isEmpty()) mPendingTimer.start();
 #endif
 }
 
 void AudioDucker::saveState() const {
 	QString path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/muted-sessions.txt";
-	if (mMuted.isEmpty()) {
+	if (mMuted.isEmpty() && mPending.isEmpty()) {
 		QFile::remove(path);
 		return;
 	}
